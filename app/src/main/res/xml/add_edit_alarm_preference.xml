@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        android:title="Add the person to be alarmed">
+        <Preference
+            android:key="contact"
+            android:title="@string/pick_the_person">
+        </Preference>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="Set keywords and Times">
+        <EditTextPreference
+            android:key="start_keyword"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/start_keyword"/>
+        <EditTextPreference
+            android:key="end_keyword"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/end_keyword"/>
+        <Preference
+            android:key="set_start_time"
+            android:title="@string/set_start_time"/>
+        <Preference
+            android:key="set_end_time"
+            android:title="@string/set_end_time"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="When do you want to alarm?">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="check_box_preference_1"
+            android:title="Check box preference"
+            app:key="alarm_monday"
+            app:title="@string/alarm_monday"/>
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="check_box_preference_7"
+            android:title="Check box preference"
+            app:key="alarm_tuesday"
+            app:title="@string/alarm_tuesday"/>
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="check_box_preference_6"
+            android:title="Check box preference"
+            app:key="alarm_wednesday"
+            app:title="@string/alarm_wednesday"/>
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="check_box_preference_5"
+            android:title="Check box preference"
+            app:key="alarm_thursday"
+            app:title="@string/alarm_thursday"/>
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="check_box_preference_2"
+            android:title="Check box preference"
+            app:key="alarm_friday"
+            app:title="@string/alarm_friday"/>
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="check_box_preference_4"
+            android:title="Check box preference"
+            app:key="alarm_saturday"
+            app:title="@string/alarm_saturday"/>
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="check_box_preference_3"
+            android:title="Check box preference"
+            app:key="alarm_sunday"
+            app:title="@string/alarm_sunday"/>
+    </PreferenceCategory>
+</PreferenceScreen>
