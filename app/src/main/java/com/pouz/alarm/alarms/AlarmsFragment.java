@@ -3,6 +3,8 @@ package com.pouz.alarm.alarms;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,12 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.pouz.alarm.R;
 import com.pouz.alarm.addeditalarm.AddEditAlarmActivity;
 import com.pouz.alarm.data.Alarm;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.Inflater;
 
@@ -25,11 +29,46 @@ import java.util.zip.Inflater;
 
 public class AlarmsFragment extends Fragment implements AlarmsContract.View {
     private AlarmsContract.Presenter mPresenter;
+    private AlarmAdapter mListAdapter;
+    private AlarmItemListener mAlarmItemListener= new AlarmItemListener() {
+        @Override
+        public void onActivateAlarm(Alarm activatedAlarm) {
+
+        }
+
+        @Override
+        public void onTaskClick(Alarm clickedAlarm) {
+
+        }
+
+        @Override
+        public void onDeactivateAlarm(Alarm deactivatedAlarm) {
+
+        }
+    };
 
     public static AlarmsFragment newInstance() {
         return new AlarmsFragment();
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mListAdapter = new AlarmAdapter(new ArrayList<Alarm>(0), mAlarmItemListener);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return super.onCreateView(inflater, container, savedInstanceState);
+        //View root = inflater.inflate()
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mPresenter.start();
+    }
 
     @Override
     public void showAddAlarm() {
@@ -39,12 +78,16 @@ public class AlarmsFragment extends Fragment implements AlarmsContract.View {
     }
 
     @Override
+    public void showAlarms(List<Alarm> alarms) {
+        mListAdapter.replaceData(alarms);
+    }
+
+    @Override
     public void setPresenter(AlarmsContract.Presenter presenter) {
         mPresenter = presenter;
     }
 
     private static class AlarmAdapter extends BaseAdapter {
-        // 여기서 하는게 실제 리스너들의 구현 방법이다 유념하자
         private List<Alarm> mAlarms;
         private AlarmItemListener mItemListener;
 
@@ -104,12 +147,9 @@ public class AlarmsFragment extends Fragment implements AlarmsContract.View {
             activateCB.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (!alarm.isActivate())
-                    {
+                    if (!alarm.isActivate()) {
                         mItemListener.onActivateAlarm(alarm);
-                    }
-                    else
-                    {
+                    } else {
                         mItemListener.onDeactivateAlarm(alarm);
                     }
                 }

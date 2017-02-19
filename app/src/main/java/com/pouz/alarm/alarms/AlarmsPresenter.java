@@ -3,7 +3,11 @@ package com.pouz.alarm.alarms;
 import android.content.Context;
 import android.support.annotation.Nullable;
 
+import com.pouz.alarm.data.Alarm;
 import com.pouz.alarm.data.source.local.AlarmsLocalDataSource;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by PouZ on 2017-02-17.
@@ -26,6 +30,22 @@ public class AlarmsPresenter implements AlarmsContract.Presenter
     @Override
     public void start()
     {
+        loadAlarms(true);
+    }
+
+    @Override
+    public void loadAlarms(boolean forcedLoad) {
+        mAlarmsLocalDataSource.getAlarms(new AlarmsLocalDataSource.LoadAlarmsCallBack()
+        {
+            @Override
+            public void onAlarmsLoaded(List<Alarm> alarms) {
+                List<Alarm> alarmsToShow = new ArrayList<Alarm>();
+                for(Alarm alarm : alarms)
+                {
+                    alarmsToShow.add(alarm);
+                }
+            }
+        });
 
     }
 

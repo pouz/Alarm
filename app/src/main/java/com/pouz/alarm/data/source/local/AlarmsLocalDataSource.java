@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.pouz.alarm.data.Alarm;
 import com.pouz.alarm.data.source.AlarmsDataSource;
@@ -49,12 +50,12 @@ public class AlarmsLocalDataSource implements  AlarmsDataSource
                         AlarmEntry.COLUMN_NAME_START_KEYWORD,
                         AlarmEntry.COLUM_NAME_END_KEYWORD,
                         AlarmEntry.COLUM_NAME_SET_DAY_OF_WEEK,
-                        AlarmEntry.COLUM_NAME_IS_ACTIVAT
+                        AlarmEntry.COLUM_NAME_IS_ACTIVATE,
                 };
 
         // send query to DB for receiving all tasks
         Cursor c = db.query(AlarmEntry.TABLE_NAME, projection, null, null, null, null, null);
-
+        Log.i("cc", "cc");
         if (c != null && c.getCount() > 0)
         {
             while(c.moveToNext())
@@ -65,7 +66,7 @@ public class AlarmsLocalDataSource implements  AlarmsDataSource
                 String startKeyword = c.getString(c.getColumnIndexOrThrow(AlarmEntry.COLUMN_NAME_START_KEYWORD));
                 String endKeyword = c.getString(c.getColumnIndexOrThrow(AlarmEntry.COLUM_NAME_END_KEYWORD));
                 int setDayOfWeek = c.getInt(c.getColumnIndexOrThrow(AlarmEntry.COLUM_NAME_SET_DAY_OF_WEEK));
-                boolean mIsActivate = c.getInt(c.getColumnIndexOrThrow(AlarmEntry.COLUM_NAME_IS_ACTIVAT)) == 1;
+                boolean mIsActivate = c.getInt(c.getColumnIndexOrThrow(AlarmEntry.COLUM_NAME_IS_ACTIVATE)) == 1;
 
                 Alarm alarm = new Alarm(time, name, phoneNumber, startKeyword, endKeyword, setDayOfWeek, mIsActivate);
             }
@@ -92,7 +93,7 @@ public class AlarmsLocalDataSource implements  AlarmsDataSource
                         AlarmEntry.COLUMN_NAME_START_KEYWORD,
                         AlarmEntry.COLUM_NAME_END_KEYWORD,
                         AlarmEntry.COLUM_NAME_SET_DAY_OF_WEEK,
-                        AlarmEntry.COLUM_NAME_IS_ACTIVAT
+                        AlarmEntry.COLUM_NAME_IS_ACTIVATE
                 };
 
         // send query to DB for receiving all tasks
@@ -107,7 +108,7 @@ public class AlarmsLocalDataSource implements  AlarmsDataSource
                 String startKeyword = c.getString(c.getColumnIndexOrThrow(AlarmEntry.COLUMN_NAME_START_KEYWORD));
                 String endKeyword = c.getString(c.getColumnIndexOrThrow(AlarmEntry.COLUM_NAME_END_KEYWORD));
                 int setDayOfWeek = c.getInt(c.getColumnIndexOrThrow(AlarmEntry.COLUM_NAME_SET_DAY_OF_WEEK));
-                boolean mIsActivate = c.getInt(c.getColumnIndexOrThrow(AlarmEntry.COLUM_NAME_IS_ACTIVAT)) == 1;
+                boolean mIsActivate = c.getInt(c.getColumnIndexOrThrow(AlarmEntry.COLUM_NAME_IS_ACTIVATE)) == 1;
 
                 alarm = new Alarm(time, name, phoneNumber, startKeyword, endKeyword, setDayOfWeek, mIsActivate);
         }
@@ -135,7 +136,7 @@ public class AlarmsLocalDataSource implements  AlarmsDataSource
         values.put(AlarmEntry.COLUMN_NAME_START_KEYWORD, alarm.getStartKeyword());
         values.put(AlarmEntry.COLUM_NAME_END_KEYWORD, alarm.getEndKeyword());
         values.put(AlarmEntry.COLUM_NAME_SET_DAY_OF_WEEK, alarm.getSetDayOfWeek());
-        values.put(AlarmEntry.COLUM_NAME_IS_ACTIVAT, alarm.isActivate());
+        values.put(AlarmEntry.COLUM_NAME_IS_ACTIVATE, alarm.isActivate());
 
         db.insert(AlarmEntry.TABLE_NAME, null, values);
 
