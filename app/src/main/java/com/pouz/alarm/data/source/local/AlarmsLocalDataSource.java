@@ -48,7 +48,8 @@ public class AlarmsLocalDataSource implements  AlarmsDataSource
                         AlarmEntry.COLUMN_NAME_TIME,
                         AlarmEntry.COLUMN_NAME_START_KEYWORD,
                         AlarmEntry.COLUM_NAME_END_KEYWORD,
-                        AlarmEntry.COLUM_NAME_SET_DAY_OF_WEEK
+                        AlarmEntry.COLUM_NAME_SET_DAY_OF_WEEK,
+                        AlarmEntry.COLUM_NAME_IS_ACTIVAT
                 };
 
         // send query to DB for receiving all tasks
@@ -64,8 +65,9 @@ public class AlarmsLocalDataSource implements  AlarmsDataSource
                 String startKeyword = c.getString(c.getColumnIndexOrThrow(AlarmEntry.COLUMN_NAME_START_KEYWORD));
                 String endKeyword = c.getString(c.getColumnIndexOrThrow(AlarmEntry.COLUM_NAME_END_KEYWORD));
                 int setDayOfWeek = c.getInt(c.getColumnIndexOrThrow(AlarmEntry.COLUM_NAME_SET_DAY_OF_WEEK));
+                boolean mIsActivate = c.getInt(c.getColumnIndexOrThrow(AlarmEntry.COLUM_NAME_IS_ACTIVAT)) == 1;
 
-                Alarm alarm = new Alarm(time, name, phoneNumber, startKeyword, endKeyword, setDayOfWeek);
+                Alarm alarm = new Alarm(time, name, phoneNumber, startKeyword, endKeyword, setDayOfWeek, mIsActivate);
             }
         }
         if(c != null) {
@@ -89,7 +91,8 @@ public class AlarmsLocalDataSource implements  AlarmsDataSource
                         AlarmEntry.COLUMN_NAME_TIME,
                         AlarmEntry.COLUMN_NAME_START_KEYWORD,
                         AlarmEntry.COLUM_NAME_END_KEYWORD,
-                        AlarmEntry.COLUM_NAME_SET_DAY_OF_WEEK
+                        AlarmEntry.COLUM_NAME_SET_DAY_OF_WEEK,
+                        AlarmEntry.COLUM_NAME_IS_ACTIVAT
                 };
 
         // send query to DB for receiving all tasks
@@ -104,8 +107,9 @@ public class AlarmsLocalDataSource implements  AlarmsDataSource
                 String startKeyword = c.getString(c.getColumnIndexOrThrow(AlarmEntry.COLUMN_NAME_START_KEYWORD));
                 String endKeyword = c.getString(c.getColumnIndexOrThrow(AlarmEntry.COLUM_NAME_END_KEYWORD));
                 int setDayOfWeek = c.getInt(c.getColumnIndexOrThrow(AlarmEntry.COLUM_NAME_SET_DAY_OF_WEEK));
+                boolean mIsActivate = c.getInt(c.getColumnIndexOrThrow(AlarmEntry.COLUM_NAME_IS_ACTIVAT)) == 1;
 
-                alarm = new Alarm(time, name, phoneNumber, startKeyword, endKeyword, setDayOfWeek);
+                alarm = new Alarm(time, name, phoneNumber, startKeyword, endKeyword, setDayOfWeek, mIsActivate);
         }
         if(c != null) {
             c.close();
@@ -131,6 +135,7 @@ public class AlarmsLocalDataSource implements  AlarmsDataSource
         values.put(AlarmEntry.COLUMN_NAME_START_KEYWORD, alarm.getStartKeyword());
         values.put(AlarmEntry.COLUM_NAME_END_KEYWORD, alarm.getEndKeyword());
         values.put(AlarmEntry.COLUM_NAME_SET_DAY_OF_WEEK, alarm.getSetDayOfWeek());
+        values.put(AlarmEntry.COLUM_NAME_IS_ACTIVAT, alarm.isActivate());
 
         db.insert(AlarmEntry.TABLE_NAME, null, values);
 

@@ -25,6 +25,7 @@ public class AlarmsDbHelper extends SQLiteOpenHelper
                     AlarmsPersistenceContract.AlarmEntry.COLUMN_NAME_START_KEYWORD + TEXT_TYPE + COMMA_SEP +
                     AlarmsPersistenceContract.AlarmEntry.COLUM_NAME_END_KEYWORD + TEXT_TYPE + COMMA_SEP +
                     AlarmsPersistenceContract.AlarmEntry.COLUM_NAME_SET_DAY_OF_WEEK + BOOLEAN_TYPE +
+                    AlarmsPersistenceContract.AlarmEntry.COLUM_NAME_IS_ACTIVAT + BOOLEAN_TYPE +
             " )";
 
     public AlarmsDbHelper(Context context)

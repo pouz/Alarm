@@ -44,6 +44,7 @@ public class AddEditAlarmFragment extends PreferenceFragmentCompat implements Ad
     private String mStartTime;
     private String mEndTime;
     private int mSetDayOfWeek;
+    private boolean mIsActivate;
 
     CheckBoxPreference mon, tue, wed, thu, fri, sat, sun;
 
@@ -85,13 +86,16 @@ public class AddEditAlarmFragment extends PreferenceFragmentCompat implements Ad
         sun = (CheckBoxPreference) findPreference("alarm_sunday");
         sun.setOnPreferenceChangeListener(this);
 
+        // TODO: change for Editmode
+        mIsActivate = true;
+
         FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.floatingActionButton);
         fab.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                mAlarm = new Alarm(mStartTime + "/" + mEndTime, mReceiveName, mReceivePhoneNumber, mStartKeyword, mEndKeyword, mSetDayOfWeek);
+                mAlarm = new Alarm(mStartTime + "~" + mEndTime, mReceiveName, mReceivePhoneNumber, mStartKeyword, mEndKeyword, mSetDayOfWeek, mIsActivate);
                 mPresenter.saveAlarm(mAlarm);
             }
         });
