@@ -32,6 +32,7 @@ public class AlarmsActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setImageResource(R.drawable.ic_action_name);
         fab.setOnClickListener(new View.OnClickListener()
         {
             @Override

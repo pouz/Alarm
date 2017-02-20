@@ -2,6 +2,7 @@ package com.pouz.alarm.data;
 
 import android.icu.util.Calendar;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 /**
  * Created by PouZ on 2017-02-17.
@@ -17,7 +18,9 @@ public final class Alarm {
     public static final int SUN = 64;
 
     @NonNull
-    private final String mTime;
+    private final int mStartTime;
+    @NonNull
+    private final int mEndTime;
     @NonNull
     private final String mName;
     @NonNull
@@ -43,8 +46,15 @@ public final class Alarm {
     private final int mSetDayOfWeek;
 
     @NonNull
-    public String getTime() {
-        return mTime;
+    public int getStartTime()
+    {
+        return mStartTime;
+    }
+
+    @NonNull
+    public int getEndTime()
+    {
+        return mEndTime;
     }
 
     @NonNull
@@ -67,9 +77,10 @@ public final class Alarm {
         return mEndKeyword;
     }
 
-    public Alarm(@NonNull String mTime, @NonNull String mName, @NonNull String mPhoneNumber, @NonNull String mStartKeyword,
+    public Alarm(@Nullable int mStartTime, @NonNull int mEndTime, @NonNull String mName, @NonNull String mPhoneNumber, @NonNull String mStartKeyword,
                  @NonNull String mEndKeyword, @NonNull int mSetDayOfWeek, @NonNull boolean mIsActivate) {
-        this.mTime = mTime;
+        this.mStartTime = mStartTime;
+        this.mEndTime = mEndTime;
         this.mName = mName;
         this.mPhoneNumber = mPhoneNumber;
         this.mStartKeyword = mStartKeyword;

@@ -18,8 +18,10 @@ import android.view.View;
 import android.widget.TimePicker;
 
 import com.pouz.alarm.R;
+import com.pouz.alarm.Utils.Utils;
 import com.pouz.alarm.data.Alarm;
 
+import java.sql.Time;
 import java.util.Date;
 
 import static android.app.Activity.RESULT_OK;
@@ -41,8 +43,8 @@ public class AddEditAlarmFragment extends PreferenceFragmentCompat implements Ad
     private String mReceivePhoneNumber;
     private String mStartKeyword;
     private String mEndKeyword;
-    private String mStartTime;
-    private String mEndTime;
+    private int mStartTime;
+    private int mEndTime;
     private int mSetDayOfWeek;
     private boolean mIsActivate;
 
@@ -95,7 +97,7 @@ public class AddEditAlarmFragment extends PreferenceFragmentCompat implements Ad
             @Override
             public void onClick(View view)
             {
-                mAlarm = new Alarm(mStartTime + "~" + mEndTime, mReceiveName, mReceivePhoneNumber, mStartKeyword, mEndKeyword, mSetDayOfWeek, mIsActivate);
+                mAlarm = new Alarm(mStartTime, mEndTime, mReceiveName, mReceivePhoneNumber, mStartKeyword, mEndKeyword, mSetDayOfWeek, mIsActivate);
                 mPresenter.saveAlarm(mAlarm);
             }
         });
@@ -221,12 +223,12 @@ public class AddEditAlarmFragment extends PreferenceFragmentCompat implements Ad
                 switch (k)
                 {
                     case "set_start_time":
-                        findPreference(k).setSummary(i + ":" + i1);
-                        mStartTime = i + ":" + i1;
+                        findPreference(k).setSummary(Utils.intToTime(Utils.timeToInt(i, i1)));
+                        mStartTime = Utils.timeToInt(i, i1);
                         break;
                     case "set_end_time":
-                        findPreference(k).setSummary(i + ":" + i1);
-                        mEndTime = i + ":" + i1;
+                        findPreference(k).setSummary(Utils.intToTime(Utils.timeToInt(i, i1)));
+                        mEndTime = Utils.timeToInt(i, i1);
                         break;
                 }
             }

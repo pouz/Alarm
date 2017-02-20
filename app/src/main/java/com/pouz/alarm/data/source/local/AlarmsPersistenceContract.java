@@ -13,12 +13,13 @@ public class AlarmsPersistenceContract
     public static abstract class AlarmEntry implements BaseColumns
     {
         public static final String TABLE_NAME = "alarm";
-        public static final String COLUMN_NAME_TIME = "time";
+        public static final String COLUMN_NAME_START_TIME = "start_time";
+        public static final String COLUMN_NAME_END_TIME = "end_time";
         public static final String COLUMN_NAME_NAME = "name";
         public static final String COLUMN_NAME_PHONE_NUMBER = "phone_number";
         public static final String COLUMN_NAME_START_KEYWORD = "start_keyword";
-        public static final String COLUM_NAME_END_KEYWORD = "end_keyword";
-        public static final String COLUM_NAME_SET_DAY_OF_WEEK = "set_day_of_week";
-        public static final String COLUM_NAME_IS_ACTIVATE = "is_active";
+        public static final String COLUMN_NAME_END_KEYWORD = "end_keyword";
+        public static final String COLUMN_NAME_SET_DAY_OF_WEEK = "set_day_of_week";
+        public static final String COLUMN_NAME_IS_ACTIVATE = "is_active";
     }
 }

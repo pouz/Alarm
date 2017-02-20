@@ -41,7 +41,7 @@ public class AlarmsPresenter implements AlarmsContract.Presenter
         {
             @Override
             public void onAlarmsLoaded(List<Alarm> alarms) {
-                List<Alarm> alarmsToShow = new ArrayList<Alarm>();
+                List<Alarm> alarmsToShow = new ArrayList<>();
                 for(Alarm alarm : alarms)
                 {
                     alarmsToShow.add(alarm);

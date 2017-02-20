@@ -16,17 +16,22 @@ public class AlarmsDbHelper extends SQLiteOpenHelper
 
     private static final String TEXT_TYPE = " TEXT";
     private static final String BOOLEAN_TYPE = " INTEGER";
+    private static final String INTEGER_TYPE = " INTEGER";
     private static final String COMMA_SEP = ",";
 
     private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + AlarmsPersistenceContract.AlarmEntry.TABLE_NAME + " (" +
-                    AlarmsPersistenceContract.AlarmEntry.COLUMN_NAME_PHONE_NUMBER + TEXT_TYPE + " PRIMARY KEY, " +
+                    AlarmsPersistenceContract.AlarmEntry.COLUMN_NAME_PHONE_NUMBER + TEXT_TYPE + COMMA_SEP +
                     AlarmsPersistenceContract.AlarmEntry.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
-                    AlarmsPersistenceContract.AlarmEntry.COLUMN_NAME_TIME + TEXT_TYPE + COMMA_SEP +
+                    AlarmsPersistenceContract.AlarmEntry.COLUMN_NAME_START_TIME + INTEGER_TYPE + COMMA_SEP +
+                    AlarmsPersistenceContract.AlarmEntry.COLUMN_NAME_END_TIME + INTEGER_TYPE + COMMA_SEP +
                     AlarmsPersistenceContract.AlarmEntry.COLUMN_NAME_START_KEYWORD + TEXT_TYPE + COMMA_SEP +
-                    AlarmsPersistenceContract.AlarmEntry.COLUM_NAME_END_KEYWORD + TEXT_TYPE + COMMA_SEP +
-                    AlarmsPersistenceContract.AlarmEntry.COLUM_NAME_SET_DAY_OF_WEEK + BOOLEAN_TYPE + COMMA_SEP +
-                    AlarmsPersistenceContract.AlarmEntry.COLUM_NAME_IS_ACTIVATE + BOOLEAN_TYPE +
+                    AlarmsPersistenceContract.AlarmEntry.COLUMN_NAME_END_KEYWORD + TEXT_TYPE + COMMA_SEP +
+                    AlarmsPersistenceContract.AlarmEntry.COLUMN_NAME_SET_DAY_OF_WEEK + BOOLEAN_TYPE + COMMA_SEP +
+                    AlarmsPersistenceContract.AlarmEntry.COLUMN_NAME_IS_ACTIVATE + BOOLEAN_TYPE + COMMA_SEP +
+                    "PRIMARY KEY(" + AlarmsPersistenceContract.AlarmEntry.COLUMN_NAME_PHONE_NUMBER + ", " +
+                    AlarmsPersistenceContract.AlarmEntry.COLUMN_NAME_START_TIME + ", " +
+                    AlarmsPersistenceContract.AlarmEntry.COLUMN_NAME_END_TIME + ")" +
             " )";
 
     public AlarmsDbHelper(Context context)
