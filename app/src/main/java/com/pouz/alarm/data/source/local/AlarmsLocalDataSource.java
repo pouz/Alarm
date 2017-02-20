@@ -55,7 +55,6 @@ public class AlarmsLocalDataSource implements  AlarmsDataSource
 
         // send query to DB for receiving all tasks
         Cursor c = db.query(AlarmEntry.TABLE_NAME, projection, null, null, null, null, null);
-        Log.i("cc", "cc");
         if (c != null && c.getCount() > 0)
         {
             while(c.moveToNext())
@@ -71,6 +70,7 @@ public class AlarmsLocalDataSource implements  AlarmsDataSource
                 Alarm alarm = new Alarm(time, name, phoneNumber, startKeyword, endKeyword, setDayOfWeek, mIsActivate);
                 alarms.add(alarm);
                 Log.i("DataSource : ", "getAlarms()");
+                Log.i("Detail : ", alarm.toString() );
             }
         }
         if(c != null) {

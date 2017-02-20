@@ -16,6 +16,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <TextView
+                android:text="TextView"
+                android:paddingBottom="35dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView2"/>
+
             <ListView
                 android:id="@+id/alarms_list"
                 android:layout_width="match_parent"

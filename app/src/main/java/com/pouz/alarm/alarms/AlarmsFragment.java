@@ -81,10 +81,11 @@ public class AlarmsFragment extends Fragment implements AlarmsContract.View {
             public void onRefresh()
             {
                 mPresenter.loadAlarms(true);
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
 
-        //setHasOptionsMenu(true);
+        setHasOptionsMenu(true);
 
         return root;
     }
@@ -167,7 +168,7 @@ public class AlarmsFragment extends Fragment implements AlarmsContract.View {
             activateCB.setChecked(alarm.isActivate());
 
             if (alarm.isActivate()) {
-                rawView.setBackgroundColor(Color.GRAY);
+                rawView.setBackgroundColor(Color.WHITE);
             } else {
                 rawView.setBackgroundColor(Color.WHITE);
             }
