@@ -69,6 +69,8 @@ public class AlarmsLocalDataSource implements  AlarmsDataSource
                 boolean mIsActivate = c.getInt(c.getColumnIndexOrThrow(AlarmEntry.COLUM_NAME_IS_ACTIVATE)) == 1;
 
                 Alarm alarm = new Alarm(time, name, phoneNumber, startKeyword, endKeyword, setDayOfWeek, mIsActivate);
+                alarms.add(alarm);
+                Log.i("DataSource : ", "getAlarms()");
             }
         }
         if(c != null) {

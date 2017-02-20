@@ -77,4 +77,10 @@ public final class Alarm {
         this.mSetDayOfWeek = mSetDayOfWeek;
         this.mIsActivate = mIsActivate;
     }
+
+    @Override
+    public String toString()
+    {
+        return mName + ":" + mPhoneNumber;
+    }
 }

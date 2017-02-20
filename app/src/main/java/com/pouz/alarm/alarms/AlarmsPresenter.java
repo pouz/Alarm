@@ -2,6 +2,7 @@ package com.pouz.alarm.alarms;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.pouz.alarm.data.Alarm;
 import com.pouz.alarm.data.source.local.AlarmsLocalDataSource;
@@ -35,6 +36,7 @@ public class AlarmsPresenter implements AlarmsContract.Presenter
 
     @Override
     public void loadAlarms(boolean forcedLoad) {
+        Log.i("AlarmsPresenter : ", "loadAlarms()");
         mAlarmsLocalDataSource.getAlarms(new AlarmsLocalDataSource.LoadAlarmsCallBack()
         {
             @Override
@@ -44,6 +46,8 @@ public class AlarmsPresenter implements AlarmsContract.Presenter
                 {
                     alarmsToShow.add(alarm);
                 }
+
+                mAlarmsView.showAlarms(alarmsToShow);
             }
         });
 
