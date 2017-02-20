@@ -16,12 +16,12 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.pouz.alarm.R;
 import com.pouz.alarm.Utils.Utils;
 import com.pouz.alarm.data.Alarm;
 
-import java.sql.Time;
 import java.util.Date;
 
 import static android.app.Activity.RESULT_OK;
@@ -41,8 +41,8 @@ public class AddEditAlarmFragment extends PreferenceFragmentCompat implements Ad
 
     private String mReceiveName;
     private String mReceivePhoneNumber;
-    private String mStartKeyword;
-    private String mEndKeyword;
+    private String mStartKeyword = "";
+    private String mEndKeyword = "";
     private int mStartTime;
     private int mEndTime;
     private int mSetDayOfWeek;
@@ -130,7 +130,6 @@ public class AddEditAlarmFragment extends PreferenceFragmentCompat implements Ad
 
     public AddEditAlarmFragment()
     {
-
     }
 
     @Override
@@ -144,11 +143,36 @@ public class AddEditAlarmFragment extends PreferenceFragmentCompat implements Ad
     {
         if (preference instanceof EditTextPreference)
         {
-            preference.setSummary(newValue.toString());
-            if (preference.getKey() == "start_keyword")
-                mStartKeyword = findPreference("start_keyword").getSummary().toString();
-            else if (preference.getKey() == "end_keyword")
-                mEndKeyword = findPreference("end_keyword").getSummary().toString();
+            ((EditTextPreference) preference).setText("");
+
+
+            if(preference.getKey().toString().equals("start_keyword"))
+            {
+                if(newValue.toString().equals(mEndKeyword))
+                {
+                    Toast.makeText(getContext(), "Start Keyword same as End Keyword", Toast.LENGTH_SHORT).show();
+                    mStartKeyword= "";
+                }
+                else
+                {
+                    mStartKeyword = newValue.toString();
+                    preference.setSummary(mStartKeyword);
+                }
+            }
+            if(preference.getKey().toString().equals("end_keyword"))
+            {
+                if(newValue.toString().equals(mStartKeyword))
+                {
+                    Toast.makeText(getContext(), "End Keyword same as Start Keyword", Toast.LENGTH_SHORT).show();
+                    mEndKeyword = "";
+                }
+                else
+                {
+                    mEndKeyword = newValue.toString();
+                    preference.setSummary(mEndKeyword);
+                }
+            }
+
         } else if (preference instanceof CheckBoxPreference)
         {
             int flag = 0;
