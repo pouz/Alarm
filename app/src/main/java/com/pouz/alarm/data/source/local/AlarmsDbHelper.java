@@ -21,6 +21,7 @@ public class AlarmsDbHelper extends SQLiteOpenHelper
 
     private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + AlarmsPersistenceContract.AlarmEntry.TABLE_NAME + " (" +
+                    AlarmsPersistenceContract.AlarmEntry.COLUMN_NAME_ID + INTEGER_TYPE + " PRIMARY KEY AUTOINCREMENT" + COMMA_SEP +
                     AlarmsPersistenceContract.AlarmEntry.COLUMN_NAME_PHONE_NUMBER + TEXT_TYPE + COMMA_SEP +
                     AlarmsPersistenceContract.AlarmEntry.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
                     AlarmsPersistenceContract.AlarmEntry.COLUMN_NAME_START_TIME + INTEGER_TYPE + COMMA_SEP +
@@ -28,10 +29,7 @@ public class AlarmsDbHelper extends SQLiteOpenHelper
                     AlarmsPersistenceContract.AlarmEntry.COLUMN_NAME_START_KEYWORD + TEXT_TYPE + COMMA_SEP +
                     AlarmsPersistenceContract.AlarmEntry.COLUMN_NAME_END_KEYWORD + TEXT_TYPE + COMMA_SEP +
                     AlarmsPersistenceContract.AlarmEntry.COLUMN_NAME_SET_DAY_OF_WEEK + BOOLEAN_TYPE + COMMA_SEP +
-                    AlarmsPersistenceContract.AlarmEntry.COLUMN_NAME_IS_ACTIVATE + BOOLEAN_TYPE + COMMA_SEP +
-                    "PRIMARY KEY(" + AlarmsPersistenceContract.AlarmEntry.COLUMN_NAME_PHONE_NUMBER + ", " +
-                    AlarmsPersistenceContract.AlarmEntry.COLUMN_NAME_START_TIME + ", " +
-                    AlarmsPersistenceContract.AlarmEntry.COLUMN_NAME_END_TIME + ")" +
+                    AlarmsPersistenceContract.AlarmEntry.COLUMN_NAME_IS_ACTIVATE + BOOLEAN_TYPE +
             " )";
 
     public AlarmsDbHelper(Context context)

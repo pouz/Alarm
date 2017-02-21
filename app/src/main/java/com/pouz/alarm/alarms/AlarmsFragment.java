@@ -2,7 +2,6 @@ package com.pouz.alarm.alarms;
 
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -38,6 +37,12 @@ public class AlarmsFragment extends Fragment implements AlarmsContract.View
         public void onAlarmClick(Alarm clickedAlarm)
         {
 
+        }
+
+        @Override
+        public void onAlarmLongClick(Alarm longClickedAlarm)
+        {
+           mPresenter.deleteAlarm(longClickedAlarm.getID());
         }
     };
 
@@ -181,6 +186,16 @@ public class AlarmsFragment extends Fragment implements AlarmsContract.View
                 }
             });
 
+            rawView.setOnLongClickListener(new View.OnLongClickListener()
+            {
+                @Override
+                public boolean onLongClick(View v)
+                {
+                    mItemListener.onAlarmLongClick(alarm);
+                    return true;
+                }
+            });
+
             return rawView;
         }
     }
@@ -188,5 +203,7 @@ public class AlarmsFragment extends Fragment implements AlarmsContract.View
     public interface AlarmItemListener
     {
         void onAlarmClick(Alarm clickedAlarm);
+
+        void onAlarmLongClick(Alarm longClickedAlarm);
     }
 }

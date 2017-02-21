@@ -8,7 +8,8 @@ import android.support.annotation.Nullable;
  * Created by PouZ on 2017-02-17.
  */
 
-public final class Alarm {
+public final class Alarm
+{
     public static final int MON = 1;
     public static final int TUE = 2;
     public static final int WED = 4;
@@ -17,6 +18,8 @@ public final class Alarm {
     public static final int SAT = 32;
     public static final int SUN = 64;
 
+    @NonNull
+    private int mId;
     @NonNull
     private final int mStartTime;
     @NonNull
@@ -33,12 +36,20 @@ public final class Alarm {
     private final boolean mIsActivate;
 
     @NonNull
-    public boolean isActivate() {
+    public int getID()
+    {
+        return mId;
+    }
+
+    @NonNull
+    public boolean isActivate()
+    {
         return mIsActivate;
     }
 
     @NonNull
-    public int getSetDayOfWeek() {
+    public int getSetDayOfWeek()
+    {
         return mSetDayOfWeek;
     }
 
@@ -58,27 +69,46 @@ public final class Alarm {
     }
 
     @NonNull
-    public String getName() {
+    public String getName()
+    {
         return mName;
     }
 
     @NonNull
-    public String getPhoneNumber() {
+    public String getPhoneNumber()
+    {
         return mPhoneNumber;
     }
 
     @NonNull
-    public String getStartKeyword() {
+    public String getStartKeyword()
+    {
         return mStartKeyword;
     }
 
     @NonNull
-    public String getEndKeyword() {
+    public String getEndKeyword()
+    {
         return mEndKeyword;
     }
 
-    public Alarm(@Nullable int mStartTime, @NonNull int mEndTime, @NonNull String mName, @NonNull String mPhoneNumber, @NonNull String mStartKeyword,
-                 @NonNull String mEndKeyword, @NonNull int mSetDayOfWeek, @NonNull boolean mIsActivate) {
+    public Alarm(@NonNull int mStartTime, @NonNull int mEndTime, @NonNull String mName, @NonNull String mPhoneNumber, @NonNull String mStartKeyword,
+                 @NonNull String mEndKeyword, @NonNull int mSetDayOfWeek, @NonNull boolean mIsActivate)
+    {
+        this.mStartTime = mStartTime;
+        this.mEndTime = mEndTime;
+        this.mName = mName;
+        this.mPhoneNumber = mPhoneNumber;
+        this.mStartKeyword = mStartKeyword;
+        this.mEndKeyword = mEndKeyword;
+        this.mSetDayOfWeek = mSetDayOfWeek;
+        this.mIsActivate = mIsActivate;
+    }
+
+    public Alarm(@NonNull int mId, @NonNull int mStartTime, @NonNull int mEndTime, @NonNull String mName, @NonNull String mPhoneNumber, @NonNull String mStartKeyword,
+                 @NonNull String mEndKeyword, @NonNull int mSetDayOfWeek, @NonNull boolean mIsActivate)
+    {
+        this.mId = mId;
         this.mStartTime = mStartTime;
         this.mEndTime = mEndTime;
         this.mName = mName;

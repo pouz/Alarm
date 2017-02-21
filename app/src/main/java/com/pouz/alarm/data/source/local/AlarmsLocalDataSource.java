@@ -18,7 +18,7 @@ import java.util.List;
  * Created by PouZ on 2017-02-17.
  */
 
-public class AlarmsLocalDataSource implements  AlarmsDataSource
+public class AlarmsLocalDataSource implements AlarmsDataSource
 {
     private static AlarmsLocalDataSource INSTANCE;
     private AlarmsDbHelper mDbHelper;
@@ -30,7 +30,8 @@ public class AlarmsLocalDataSource implements  AlarmsDataSource
 
     public static AlarmsLocalDataSource getInstance(@NonNull Context context)
     {
-        if(INSTANCE == null) {
+        if (INSTANCE == null)
+        {
             INSTANCE = new AlarmsLocalDataSource(context);
         }
         return INSTANCE;
@@ -44,6 +45,7 @@ public class AlarmsLocalDataSource implements  AlarmsDataSource
 
         String[] projection =
                 {
+                        AlarmEntry.COLUMN_NAME_ID,
                         AlarmEntry.COLUMN_NAME_PHONE_NUMBER,
                         AlarmEntry.COLUMN_NAME_NAME,
                         AlarmEntry.COLUMN_NAME_START_TIME,
@@ -58,8 +60,9 @@ public class AlarmsLocalDataSource implements  AlarmsDataSource
         Cursor c = db.query(AlarmEntry.TABLE_NAME, projection, null, null, null, null, null);
         if (c != null && c.getCount() > 0)
         {
-            while(c.moveToNext())
+            while (c.moveToNext())
             {
+                int id = c.getInt(c.getColumnIndexOrThrow(AlarmEntry.COLUMN_NAME_ID));
                 String phoneNumber = c.getString(c.getColumnIndexOrThrow(AlarmEntry.COLUMN_NAME_PHONE_NUMBER));
                 String name = c.getString(c.getColumnIndexOrThrow(AlarmEntry.COLUMN_NAME_NAME));
                 int start_time = c.getInt(c.getColumnIndexOrThrow(AlarmEntry.COLUMN_NAME_START_TIME));
@@ -69,13 +72,14 @@ public class AlarmsLocalDataSource implements  AlarmsDataSource
                 int setDayOfWeek = c.getInt(c.getColumnIndexOrThrow(AlarmEntry.COLUMN_NAME_SET_DAY_OF_WEEK));
                 boolean mIsActivate = c.getInt(c.getColumnIndexOrThrow(AlarmEntry.COLUMN_NAME_IS_ACTIVATE)) == 1;
 
-                Alarm alarm = new Alarm(start_time, end_time, name, phoneNumber, startKeyword, endKeyword, setDayOfWeek, mIsActivate);
+                Alarm alarm = new Alarm(id, start_time, end_time, name, phoneNumber, startKeyword, endKeyword, setDayOfWeek, mIsActivate);
                 alarms.add(alarm);
                 Log.i("DataSource : ", "getAlarms()");
-                Log.i("Detail : ", alarm.toString() );
+                Log.i("Detail : ", alarm.toString() + ".. " + id);
             }
         }
-        if(c != null) {
+        if (c != null)
+        {
             c.close();
         }
 
@@ -91,6 +95,7 @@ public class AlarmsLocalDataSource implements  AlarmsDataSource
 
         String[] projection =
                 {
+                        AlarmEntry.COLUMN_NAME_ID,
                         AlarmEntry.COLUMN_NAME_PHONE_NUMBER,
                         AlarmEntry.COLUMN_NAME_NAME,
                         AlarmEntry.COLUMN_NAME_START_TIME,
@@ -107,24 +112,26 @@ public class AlarmsLocalDataSource implements  AlarmsDataSource
 
         if (c != null && c.getCount() > 0)
         {
-                String phoneNumber = c.getString(c.getColumnIndexOrThrow(AlarmEntry.COLUMN_NAME_PHONE_NUMBER));
-                String name = c.getString(c.getColumnIndexOrThrow(AlarmEntry.COLUMN_NAME_NAME));
-                int start_time = c.getInt(c.getColumnIndexOrThrow(AlarmEntry.COLUMN_NAME_START_TIME));
-                int end_time = c.getInt(c.getColumnIndexOrThrow(AlarmEntry.COLUMN_NAME_END_TIME));
-                String startKeyword = c.getString(c.getColumnIndexOrThrow(AlarmEntry.COLUMN_NAME_START_KEYWORD));
-                String endKeyword = c.getString(c.getColumnIndexOrThrow(AlarmEntry.COLUMN_NAME_END_KEYWORD));
-                int setDayOfWeek = c.getInt(c.getColumnIndexOrThrow(AlarmEntry.COLUMN_NAME_SET_DAY_OF_WEEK));
-                boolean mIsActivate = c.getInt(c.getColumnIndexOrThrow(AlarmEntry.COLUMN_NAME_IS_ACTIVATE)) == 1;
+            int id = c.getInt(c.getColumnIndexOrThrow(AlarmEntry.COLUMN_NAME_ID));
+            String phoneNumber = c.getString(c.getColumnIndexOrThrow(AlarmEntry.COLUMN_NAME_PHONE_NUMBER));
+            String name = c.getString(c.getColumnIndexOrThrow(AlarmEntry.COLUMN_NAME_NAME));
+            int start_time = c.getInt(c.getColumnIndexOrThrow(AlarmEntry.COLUMN_NAME_START_TIME));
+            int end_time = c.getInt(c.getColumnIndexOrThrow(AlarmEntry.COLUMN_NAME_END_TIME));
+            String startKeyword = c.getString(c.getColumnIndexOrThrow(AlarmEntry.COLUMN_NAME_START_KEYWORD));
+            String endKeyword = c.getString(c.getColumnIndexOrThrow(AlarmEntry.COLUMN_NAME_END_KEYWORD));
+            int setDayOfWeek = c.getInt(c.getColumnIndexOrThrow(AlarmEntry.COLUMN_NAME_SET_DAY_OF_WEEK));
+            boolean mIsActivate = c.getInt(c.getColumnIndexOrThrow(AlarmEntry.COLUMN_NAME_IS_ACTIVATE)) == 1;
 
-                alarm = new Alarm(start_time, end_time, name, phoneNumber, startKeyword, endKeyword, setDayOfWeek, mIsActivate);
+            alarm = new Alarm(id, start_time, end_time, name, phoneNumber, startKeyword, endKeyword, setDayOfWeek, mIsActivate);
         }
-        if(c != null) {
+        if (c != null)
+        {
             c.close();
         }
 
         db.close();
 
-        if(alarm != null)
+        if (alarm != null)
             callBack.onAlarmLoaded(alarm);
         else
             callBack.onDataNotAvailable();
@@ -151,12 +158,15 @@ public class AlarmsLocalDataSource implements  AlarmsDataSource
     }
 
     @Override
-    public void deleteAlarm(@NonNull String phoneNum)
+    //public void deleteAlarm(@NonNull String phoneNum)
+    public void deleteAlarm(@NonNull int id)
     {
+        // reordering after delete alarm.
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
-        String selection = AlarmEntry.COLUMN_NAME_PHONE_NUMBER + " LIKE ?";
-        String[] selectionArgs = {phoneNum};
+        Log.i("AlarmsDataSource : ", "deleteAlarm()");
+        String selection = AlarmEntry.COLUMN_NAME_ID + " LIKE ?";
+        String[] selectionArgs = {Integer.toString(id)};
 
         db.delete(AlarmEntry.TABLE_NAME, selection, selectionArgs);
 

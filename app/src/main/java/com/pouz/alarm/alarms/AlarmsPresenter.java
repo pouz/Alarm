@@ -58,4 +58,11 @@ public class AlarmsPresenter implements AlarmsContract.Presenter
     {
         mAlarmsView.showAddAlarm();
     }
+
+    @Override
+    public void deleteAlarm(int id)
+    {
+        mAlarmsLocalDataSource.deleteAlarm(id);
+        loadAlarms(true);
+    }
 }

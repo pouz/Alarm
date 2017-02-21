@@ -13,16 +13,24 @@ public interface AddEditAlarmContract
     interface View extends BaseView<Presenter>
     {
         void showContact();
+
         void showTimePicker(String Key);
-        /** called by saveAlarm() */
+
+        /**
+         * called by saveAlarm()
+         */
         void finishAddEdit();
     }
 
     interface Presenter extends BasePresenter
     {
         void selectContact();
+
         void selectTimePicker(String key);
+
         void saveAlarm(Alarm alarm);
+
         void updateAlarm(Alarm alarm);
+       
     }
 }

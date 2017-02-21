@@ -15,7 +15,7 @@ public interface AlarmsContract
 {
     interface View extends BaseView<Presenter>
     {
-       void showAddAlarm();
+        void showAddAlarm();
 
         void showAlarms(List<Alarm> alarms);
     }
@@ -23,7 +23,9 @@ public interface AlarmsContract
     interface Presenter extends BasePresenter
     {
         void addAlarm();
+
         void loadAlarms(boolean forcedLoad);
 
+        void deleteAlarm(int id);
     }
 }

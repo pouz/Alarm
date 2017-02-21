@@ -31,5 +31,6 @@ public interface AlarmsDataSource
 
     void saveAlarm(@NonNull Alarm alarm);
 
-    void deleteAlarm(@NonNull String phoneNum);
+    //void deleteAlarm(@NonNull String phoneNum);
+    void deleteAlarm(@NonNull int id);
 }
