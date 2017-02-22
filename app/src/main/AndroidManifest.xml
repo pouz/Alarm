@@ -29,9 +29,8 @@
             android:label="@string/title_activity_alarms">
         </activity>
 
-
-        <receiver android:name="com.pouz.alarm.receiver.TextMessageReceiver">
-            <intent-filter>
+        <receiver android:name=".receiver.SmsReceiver">
+            <intent-filter android:priority="999">
                 <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
             </intent-filter>
         </receiver>

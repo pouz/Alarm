@@ -1,8 +1,14 @@
 package com.pouz.alarm.alarms;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,12 +21,41 @@ import android.view.MenuItem;
 
 
 import com.pouz.alarm.R;
+import com.pouz.alarm.Utils.PermissionManager;
 import com.pouz.alarm.data.source.local.AlarmsLocalDataSource;
 
 public class AlarmsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
 {
+    public static final int REQUEST_CODE_FOR_SMS = 1;
     private AlarmsPresenter mAlarmPresenter;
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+        //PermissionManager.check(this, Manifest.permission.RECEIVE_SMS, REQUEST_CODE_FOR_SMS);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECEIVE_SMS}, REQUEST_CODE_FOR_SMS);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    {
+        if (requestCode == REQUEST_CODE_FOR_SMS)
+        {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            {
+                Log.e("RequestPermissionResult", "Granted SMS");
+            } else
+            {
+                Log.e("RequestPermissionResult", "Failed SMS");
+            }
+            return;
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -52,7 +87,7 @@ public class AlarmsActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         AlarmsFragment alarmsFragment = (AlarmsFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
-        if(alarmsFragment == null)
+        if (alarmsFragment == null)
         {
             // add Fragment to Activity
             alarmsFragment = AlarmsFragment.newInstance();
