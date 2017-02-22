@@ -4,18 +4,22 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.telephony.SmsMessage;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.pouz.alarm.Utils.Utils;
+import com.pouz.alarm.addeditalarm.AddEditAlarmActivity;
 import com.pouz.alarm.data.Alarm;
 import com.pouz.alarm.data.source.AlarmsDataSource;
 import com.pouz.alarm.data.source.local.AlarmsLocalDataSource;
+import com.pouz.alarm.ringing.RingingActivity;
 
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+
+import static java.security.AccessController.getContext;
 
 /**
  * Created by PouZ on 2017-02-22.
@@ -93,7 +97,8 @@ public class SmsReceiver extends BroadcastReceiver
 
     private void doAlarmRing()
     {
-
+        Intent intent = new Intent(mContext, RingingActivity.class);
+        mContext.startActivity(intent);
     }
 
     private boolean isStartKeyword(String startKeyword)
