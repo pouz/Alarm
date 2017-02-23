@@ -1,25 +1,24 @@
 package com.pouz.alarm.receiver;
 
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.telephony.SmsMessage;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.pouz.alarm.Utils.Utils;
-import com.pouz.alarm.addeditalarm.AddEditAlarmActivity;
 import com.pouz.alarm.data.Alarm;
 import com.pouz.alarm.data.source.AlarmsDataSource;
 import com.pouz.alarm.data.source.local.AlarmsLocalDataSource;
-import com.pouz.alarm.ringing.RingingActivity;
+import com.pouz.alarm.service.AlarmService;
 
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
-
-import static java.security.AccessController.getContext;
 
 /**
  * Created by PouZ on 2017-02-22.
@@ -33,6 +32,8 @@ public class SmsReceiver extends BroadcastReceiver
 
     private StringBuilder mPhoneNumber;
     private StringBuilder mMessageBody;
+
+    public static boolean ALARM_ACTIVITY = false;
 
     @Override
     public void onReceive(Context context, Intent intent)
@@ -81,13 +82,23 @@ public class SmsReceiver extends BroadcastReceiver
                         Calendar calendar = Calendar.getInstance(Locale.getDefault());
                         int currentTime = Utils.timeToInt(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
 
-                        if (isAvailableDay(alarm.getSetDayOfWeek()) &&
+                        if (    !isAlarmServiceRunning(AlarmService.class) &&
+                                isAvailableDay(alarm.getSetDayOfWeek()) &&
                                 isStartKeyword(alarm.getStartKeyword()) &&
                                 isAvailableTime(alarm.getStartTime(), alarm.getEndTime(), currentTime))
                         {
+                            /** activate an alarm service */
                             Toast.makeText(mContext, "알람울림", Toast.LENGTH_SHORT).show();
+                            ALARM_ACTIVITY = true;
                             doAlarmRing();
                             return;
+                        }
+
+                        else if( isAlarmServiceRunning(AlarmService.class) &&
+                                isEndKeyword(alarm.getEndKeyword()))
+                        {
+                            // TODO: STOP AlarmService
+                            ALARM_ACTIVITY = false;
                         }
                     }
                 }
@@ -95,15 +106,39 @@ public class SmsReceiver extends BroadcastReceiver
         });
     }
 
+    private boolean isAlarmServiceRunning(Class<?> serviceClass)
+    {
+        ActivityManager manager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
+        {
+            if (serviceClass.getName().equals(service.service.getClass()))
+            {
+                Log.i("isAlarmServiceRunning", true + "");
+                return true;
+            }
+        }
+        Log.i("isAlarmServiceRunning", false + "");
+        return false;
+    }
+
     private void doAlarmRing()
     {
-        Intent intent = new Intent(mContext, RingingActivity.class);
-        mContext.startActivity(intent);
+        // TODO: need to add for calling alarm service
+        if (isAlarmServiceRunning(AlarmService.class))
+        {
+            Intent serviceIntent = new Intent(mContext, this.getClass());
+            mContext.startService(serviceIntent);
+        }
     }
 
     private boolean isStartKeyword(String startKeyword)
     {
         return startKeyword.equals(mMessageBody.toString());
+    }
+
+    private boolean isEndKeyword(String endKeyword)
+    {
+        return endKeyword.equals(mMessageBody.toString());
     }
 
     /**

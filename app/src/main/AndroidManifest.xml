@@ -29,17 +29,25 @@
             android:label="@string/title_activity_alarms"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity
-            android:name=".ringing.RingingActivity"
-            android:label="@string/title_activity_alarms"
-            android:theme="@android:style/Theme.Dialog">
-        </activity>
 
         <receiver android:name=".receiver.SmsReceiver">
             <intent-filter android:priority="999">
                 <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
             </intent-filter>
         </receiver>
+
+        <receiver android:name=".receiver.AlarmServiceStopReceiver"
+                  android:enabled="true"
+                  android:exported="true">
+            <intent-filter>
+                <action android:name="com.pouz.alarm.receiver.AlarmStopReceiver"/>
+            </intent-filter>
+        </receiver>
+
+        <service android:name="service.AlarmService"
+            android:enabled="true">
+        </service>
+
     </application>
 
 </manifest>
