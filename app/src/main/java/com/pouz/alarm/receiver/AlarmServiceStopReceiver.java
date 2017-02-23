@@ -20,10 +20,7 @@ public class AlarmServiceStopReceiver extends BroadcastReceiver
         /** we decide which we will revival a dead service from a static variable in SmsReceiver Class.
          *  Any solution more efficient?
          * */
-        if (SmsReceiver.ALARM_ACTIVITY == true)
-        {
-            Log.i(AlarmServiceStopReceiver.class.getSimpleName(), "Service Stops!");
-            context.startService(new Intent(context, AlarmService.class));
-        }
+        Log.i(AlarmServiceStopReceiver.class.getSimpleName(), "Service Stops!");
+        context.startService(new Intent(context, AlarmService.class));
     }
 }

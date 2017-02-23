@@ -12,10 +12,14 @@ import android.util.Log;
 
 public class AlarmService extends Service
 {
+    // TODO: need to find another way to communicate between Service and Receiver(SmsReceiver <-> AlarmService, SmsReceiver <-> AlarmStopService)
+    public static boolean ALARM_ACTIVITY;
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)
     {
-        return super.onStartCommand(intent, flags, startId);
+        Log.i("AlarmService", "Start Service");
+        return Service.START_NOT_STICKY;
     }
 
     @Override
@@ -23,8 +27,11 @@ public class AlarmService extends Service
     {
         super.onDestroy();
         Log.i("AlarmService", "Exit Service");
-        Intent broadcastIntent = new Intent("com.pouz.alarm.receiver.AlarmServiceReceiver");
-        sendBroadcast(broadcastIntent);
+        if(ALARM_ACTIVITY)
+        {
+            Intent broadcastIntent = new Intent("com.pouz.alarm.receiver.AlarmStopReceiver");
+            sendBroadcast(broadcastIntent);
+        }
     }
 
     @Nullable

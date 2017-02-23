@@ -33,8 +33,6 @@ public class SmsReceiver extends BroadcastReceiver
     private StringBuilder mPhoneNumber;
     private StringBuilder mMessageBody;
 
-    public static boolean ALARM_ACTIVITY = false;
-
     @Override
     public void onReceive(Context context, Intent intent)
     {
@@ -81,24 +79,24 @@ public class SmsReceiver extends BroadcastReceiver
                     {
                         Calendar calendar = Calendar.getInstance(Locale.getDefault());
                         int currentTime = Utils.timeToInt(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
+                        Log.i("ALARM_ACTIVITY", AlarmService.ALARM_ACTIVITY + "");
 
-                        if (    !isAlarmServiceRunning(AlarmService.class) &&
+                        if (    !(AlarmService.ALARM_ACTIVITY) &&
+                                !isMyServiceRunning(AlarmService.class) &&
                                 isAvailableDay(alarm.getSetDayOfWeek()) &&
                                 isStartKeyword(alarm.getStartKeyword()) &&
                                 isAvailableTime(alarm.getStartTime(), alarm.getEndTime(), currentTime))
                         {
                             /** activate an alarm service */
                             Toast.makeText(mContext, "알람울림", Toast.LENGTH_SHORT).show();
-                            ALARM_ACTIVITY = true;
                             doAlarmRing();
-                            return;
-                        }
 
-                        else if( isAlarmServiceRunning(AlarmService.class) &&
+                            return;
+                        } else if (AlarmService.ALARM_ACTIVITY &&
                                 isEndKeyword(alarm.getEndKeyword()))
                         {
-                            // TODO: STOP AlarmService
-                            ALARM_ACTIVITY = false;
+                            stopAlarmRing();
+                            return;
                         }
                     }
                 }
@@ -106,12 +104,12 @@ public class SmsReceiver extends BroadcastReceiver
         });
     }
 
-    private boolean isAlarmServiceRunning(Class<?> serviceClass)
+    private boolean isMyServiceRunning(Class<?> serviceClass)
     {
         ActivityManager manager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
         {
-            if (serviceClass.getName().equals(service.service.getClass()))
+            if (serviceClass.getName().equals(service.service.getClassName()))
             {
                 Log.i("isAlarmServiceRunning", true + "");
                 return true;
@@ -121,14 +119,26 @@ public class SmsReceiver extends BroadcastReceiver
         return false;
     }
 
+    private void stopAlarmRing()
+    {
+        Log.i("stopAlarmRing", "Ye");
+        AlarmService.ALARM_ACTIVITY = false;
+
+        Intent serviceIntent = new Intent(mContext, AlarmService.class);
+        mContext.stopService(serviceIntent);
+
+        Log.i("stopAlarmRing", "isAlarmServiceRunning? " + isMyServiceRunning(AlarmService.class) + "");
+    }
+
     private void doAlarmRing()
     {
-        // TODO: need to add for calling alarm service
-        if (isAlarmServiceRunning(AlarmService.class))
-        {
-            Intent serviceIntent = new Intent(mContext, this.getClass());
-            mContext.startService(serviceIntent);
-        }
+        Log.i("doAlarmRing", "Ye");
+        AlarmService.ALARM_ACTIVITY = true;
+
+        Intent serviceIntent = new Intent(mContext, AlarmService.class);
+        mContext.startService(serviceIntent);
+
+        Log.i("doAlarmRing", "isAlarmServiceRunning? " + isMyServiceRunning(AlarmService.class) + "");
     }
 
     private boolean isStartKeyword(String startKeyword)
