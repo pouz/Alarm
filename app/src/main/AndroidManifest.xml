@@ -54,7 +54,7 @@
             android:name=".service.AlarmService"
             android:enabled="true"
             android:exported="true"
-            android:process=".remote">
+            android:process=":remote">
             <intent-filter>
                 <action android:name="com.pouz.alarm.service.AlarmService"/>
             </intent-filter>
@@ -78,7 +78,6 @@
         <receiver
             android:name=".receiver.DummyCallReceiver"
             android:enabled="true"
-            android:process=".dummy"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.pouz.alarm.service.DummyCallReceiver"/>
