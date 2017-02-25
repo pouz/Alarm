@@ -28,6 +28,7 @@ public class AlarmsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
 {
     public static final int REQUEST_CODE_FOR_SMS = 1;
+    public static final int REQUEST_CODE_FOR_BOOT_COMPLETED = 2;
     private AlarmsPresenter mAlarmPresenter;
 
     @Override
@@ -36,9 +37,10 @@ public class AlarmsActivity extends AppCompatActivity
         super.onStart();
         //PermissionManager.check(this, Manifest.permission.RECEIVE_SMS, REQUEST_CODE_FOR_SMS);
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED)
-        {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECEIVE_SMS}, REQUEST_CODE_FOR_SMS);
-        }
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_BOOT_COMPLETED) != PackageManager.PERMISSION_DENIED)
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECEIVE_BOOT_COMPLETED}, REQUEST_CODE_FOR_BOOT_COMPLETED);
     }
 
     @Override
@@ -54,6 +56,18 @@ public class AlarmsActivity extends AppCompatActivity
                 Log.e("RequestPermissionResult", "Failed SMS");
             }
             return;
+        }
+        else if(requestCode == REQUEST_CODE_FOR_BOOT_COMPLETED)
+        {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            {
+                Log.e("RequestPermissionResult", "Granted Boot Completed");
+            } else
+            {
+                Log.e("RequestPermissionResult", "Failed Boot Completed");
+            }
+            return;
+
         }
     }
 

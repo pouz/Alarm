@@ -1,10 +1,13 @@
 package com.pouz.alarm.receiver;
 
 import android.app.ActivityManager;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.FragmentManager;
 import android.telephony.SmsMessage;
 import android.util.Log;
@@ -33,6 +36,8 @@ public class SmsReceiver extends BroadcastReceiver
     private StringBuilder mPhoneNumber;
     private StringBuilder mMessageBody;
 
+
+
     @Override
     public void onReceive(Context context, Intent intent)
     {
@@ -41,6 +46,8 @@ public class SmsReceiver extends BroadcastReceiver
 
         mPhoneNumber = new StringBuilder();
         mMessageBody = new StringBuilder();
+
+        Log.i("SmsReceiver", "receive android.provider.Telephony.SMS_RECEIVED");
 
         if (intent.getAction().equals(SMS_RECEIVED))
         {
@@ -77,9 +84,10 @@ public class SmsReceiver extends BroadcastReceiver
                 {
                     if (alarm.getPhoneNumber().toString().replaceAll("[()\\s-]+", "").equals(mPhoneNumber.toString()))
                     {
+                        Log.i("SmsReceiver", "Match MobileNumber");
                         Calendar calendar = Calendar.getInstance(Locale.getDefault());
                         int currentTime = Utils.timeToInt(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
-                        Log.i("ALARM_ACTIVITY", AlarmService.ALARM_ACTIVITY + "");
+                        Log.i("SmsReceiver", "AlarmActivity : " + AlarmService.ALARM_ACTIVITY + "");
 
                         if (    !(AlarmService.ALARM_ACTIVITY) &&
                                 !isMyServiceRunning(AlarmService.class) &&
@@ -88,6 +96,8 @@ public class SmsReceiver extends BroadcastReceiver
                                 isAvailableTime(alarm.getStartTime(), alarm.getEndTime(), currentTime))
                         {
                             /** activate an alarm service */
+                            Log.i("SmsReceiver", "Match all options");
+
                             Toast.makeText(mContext, "알람울림", Toast.LENGTH_SHORT).show();
                             doAlarmRing();
 
@@ -95,6 +105,7 @@ public class SmsReceiver extends BroadcastReceiver
                         } else if (AlarmService.ALARM_ACTIVITY &&
                                 isEndKeyword(alarm.getEndKeyword()))
                         {
+                            Log.i("SmsReceiver", "Match failed");
                             stopAlarmRing();
                             return;
                         }
@@ -126,8 +137,6 @@ public class SmsReceiver extends BroadcastReceiver
 
         Intent serviceIntent = new Intent(mContext, AlarmService.class);
         mContext.stopService(serviceIntent);
-
-        Log.i("stopAlarmRing", "isAlarmServiceRunning? " + isMyServiceRunning(AlarmService.class) + "");
     }
 
     private void doAlarmRing()
@@ -137,8 +146,6 @@ public class SmsReceiver extends BroadcastReceiver
 
         Intent serviceIntent = new Intent(mContext, AlarmService.class);
         mContext.startService(serviceIntent);
-
-        Log.i("doAlarmRing", "isAlarmServiceRunning? " + isMyServiceRunning(AlarmService.class) + "");
     }
 
     private boolean isStartKeyword(String startKeyword)
