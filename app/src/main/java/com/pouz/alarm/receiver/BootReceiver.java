@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.SystemClock;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.pouz.alarm.service.DummyService;
 
 public class BootReceiver extends BroadcastReceiver

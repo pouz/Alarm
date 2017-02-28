@@ -24,7 +24,7 @@ import android.util.Log;
 public class AlarmService extends Service
 {
     // TODO: need to find another way to communicate between Service and Receiver(SmsReceiver <-> AlarmService, SmsReceiver <-> AlarmStopService)
-    public static boolean ALARM_ACTIVITY;
+    private AlarmAuth mAlarmAuth;
 
     private final static int VIBRATE_DELAY_TIME = 2000;
     private final static int DURATION_OF_VIBRATION = 1000;
@@ -84,6 +84,8 @@ public class AlarmService extends Service
         HandlerThread ht = new HandlerThread("alarm_service");
         ht.start();
         mHandler = new Handler(ht.getLooper());
+
+        mAlarmAuth = AlarmAuth.getInstance();
     }
 
     @Override
@@ -100,12 +102,11 @@ public class AlarmService extends Service
     public void onDestroy()
     {
         Log.e("AlarmService", "Exit Service");
-        if (ALARM_ACTIVITY)
+        if (mAlarmAuth.isIsAlarmActive())
         {
 //            if(mPlayer != null)
 //                sCurrentPosition = mPlayer.getCurrentPosition();
 
-            Log.e("AlarmService", "onDestroy - send broadcast");
             Intent broadcastIntent = new Intent("com.pouz.alarm.receiver.AlarmStopReceiver");
             sendBroadcast(broadcastIntent);
             return;
