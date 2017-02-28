@@ -67,7 +67,7 @@ public class AlarmsFragment extends Fragment implements AlarmsContract.View
         ListView listView = (ListView) root.findViewById(R.id.alarms_list);
         listView.setAdapter(mListAdapter);
 
-        final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.swype_layout);
+        final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipe_layout);
         swipeRefreshLayout.setColorSchemeColors(
                 ContextCompat.getColor(getActivity(), R.color.colorPrimary),
                 ContextCompat.getColor(getActivity(), R.color.colorAccent),

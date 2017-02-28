@@ -3,14 +3,14 @@
                   xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
-        android:title="Add the person to be alarmed">
+        android:title="알람 명령을 받을 대상을 선택하세요">
         <Preference
             android:key="contact"
             android:title="@string/pick_the_person">
         </Preference>
     </PreferenceCategory>
     <PreferenceCategory
-        android:title="Set keywords and Times">
+        android:title="알람 키워드와 시간을 선택하세요">
         <EditTextPreference
             android:key="start_keyword"
             android:selectAllOnFocus="true"
@@ -29,7 +29,7 @@
             android:title="@string/set_end_time"/>
     </PreferenceCategory>
     <PreferenceCategory
-        android:title="When do you want to alarm?">
+        android:title="언제 알람이 울리길 원하세요?">
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="check_box_preference_1"

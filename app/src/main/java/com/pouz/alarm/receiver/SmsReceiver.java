@@ -132,8 +132,9 @@ public class SmsReceiver extends BroadcastReceiver
     private void stopAlarmRing()
     {
         Log.i("stopAlarmRing", "Ye");
-        mAlarmAuth.setIsAlarmActive(false);
-        mAlarmAuth.setAlarmAuthor("");
+        //mAlarmAuth.setIsAlarmActive(false);
+        //mAlarmAuth.setAlarmAuthor("");
+        AlarmAuth.delInstance();
 
         Intent serviceIntent = new Intent(mContext, AlarmService.class);
         mContext.stopService(serviceIntent);

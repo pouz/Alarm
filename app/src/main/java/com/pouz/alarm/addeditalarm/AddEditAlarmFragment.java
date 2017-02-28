@@ -14,12 +14,19 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.pouz.alarm.IntroActivity;
 import com.pouz.alarm.R;
 import com.pouz.alarm.Utils.Utils;
+import com.pouz.alarm.alarms.AlarmsActivity;
 import com.pouz.alarm.data.Alarm;
 
 import java.util.Date;
@@ -63,6 +70,38 @@ public class AddEditAlarmFragment extends PreferenceFragmentCompat implements Ad
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        /** 상단에 글씨로 된 옵션메뉴 생성하려면 app:showAsAction="always" 해야함 */
+        setHasOptionsMenu(true);
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.activity_add_edit_menu, menu);
+    }
+
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId())
+        {
+            case R.id.menu_add_alarm:
+                /** add logic to check a alarm set is correct */
+                mAlarm = new Alarm(mStartTime, mEndTime, mReceiveName, mReceivePhoneNumber, mStartKeyword, mEndKeyword, mSetDayOfWeek, mIsActivate);
+                mPresenter.saveAlarm(mAlarm);
+                return true;
+            case android.R.id.home:
+                Intent intent = new Intent(getContext(), AlarmsActivity.class);
+                startActivity(intent);
+
+                return true;
+        }
+        return false;
+    }
+
+    @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey)
     {
         addPreferencesFromResource(R.xml.add_edit_alarm_preference);
@@ -90,17 +129,6 @@ public class AddEditAlarmFragment extends PreferenceFragmentCompat implements Ad
 
         // TODO: change for Editmode
         mIsActivate = true;
-
-        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.floatingActionButton);
-        fab.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                mAlarm = new Alarm(mStartTime, mEndTime, mReceiveName, mReceivePhoneNumber, mStartKeyword, mEndKeyword, mSetDayOfWeek, mIsActivate);
-                mPresenter.saveAlarm(mAlarm);
-            }
-        });
     }
 
     @Override
@@ -179,6 +207,7 @@ public class AddEditAlarmFragment extends PreferenceFragmentCompat implements Ad
             // 왜 반응이 한박자 느릴까? 누르고 boolean check가 바뀌기 전에 호출되는건가...
             // 그렇다면 어떻게 해결해야 하는가?
             // 이것말고 리스트로 해결해보자
+            // TODO: check here for checkbox preference
             if (!((CheckBoxPreference) preference).isChecked())
                 ((CheckBoxPreference) preference).setChecked(true);
             else
@@ -262,7 +291,8 @@ public class AddEditAlarmFragment extends PreferenceFragmentCompat implements Ad
     @Override
     public void finishAddEdit()
     {
-        getActivity().setResult(Activity.RESULT_OK);
-        getActivity().finish();
+        getActivity().setResult(Activity.RESULT_OK); // Intent에 추가되나?
+        // TODO: Need to check right here
+        getActivity().finish(); // 현재 액티비티 닫음. 전 액티비티로 회귀? of something?
     }
 }

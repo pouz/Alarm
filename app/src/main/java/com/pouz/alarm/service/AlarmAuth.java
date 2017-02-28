@@ -19,6 +19,11 @@ public class AlarmAuth
         return mAlarmAuth;
     }
 
+    public static void delInstance()
+    {
+        mAlarmAuth = null;
+    }
+
     public String getAlarmAuthor()
     {
         return mAlarmAuthor;
@@ -38,5 +43,4 @@ public class AlarmAuth
     {
         this.mIsAlarmActive = mIsAlarmActive;
     }
-    // 가나다라마바사아자차카타파하
 }
