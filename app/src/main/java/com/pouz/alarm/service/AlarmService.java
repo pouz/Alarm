@@ -21,8 +21,7 @@ import android.util.Log;
  * Created by PouZ on 2017-02-24.
  */
 
-public class AlarmService extends Service
-{
+public class AlarmService extends Service {
     // TODO: need to find another way to communicate between Service and Receiver(SmsReceiver <-> AlarmService, SmsReceiver <-> AlarmStopService)
     private AlarmAuth mAlarmAuth;
 
@@ -37,24 +36,19 @@ public class AlarmService extends Service
     private Vibrator mVibrator;
 
     private Handler mHandler = new Handler();
-    private Runnable mVibrationRunnable = new Runnable()
-    {
+    private Runnable mVibrationRunnable = new Runnable() {
         @Override
-        public void run()
-        {
+        public void run() {
             mVibrator.vibrate(DURATION_OF_VIBRATION);
             // Provide loop for vibration
             mHandler.postDelayed(mVibrationRunnable, DURATION_OF_VIBRATION + VIBRATE_DELAY_TIME);
         }
     };
 
-    private Runnable mVolumeRunnable = new Runnable()
-    {
+    private Runnable mVolumeRunnable = new Runnable() {
         @Override
-        public void run()
-        {
-            if (mPlayer != null)
-            {
+        public void run() {
+            if (mPlayer != null) {
                 AudioManager am = (AudioManager) getSystemService(AUDIO_SERVICE);
 
                 mPlayer.setVolume(MAX_VOLUME, MAX_VOLUME);

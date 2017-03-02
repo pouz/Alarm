@@ -47,8 +47,6 @@ public class SmsReceiver extends BroadcastReceiver
         mPhoneNumber = new StringBuilder();
         mMessageBody = new StringBuilder();
 
-        Log.i("SmsReceiver", "receive android.provider.Telephony.SMS_RECEIVED");
-
         if (intent.getAction().equals(SMS_RECEIVED))
         {
             Bundle bundle = intent.getExtras();
@@ -94,8 +92,6 @@ public class SmsReceiver extends BroadcastReceiver
                                 isAvailableTime(alarm.getStartTime(), alarm.getEndTime(), currentTime))
                         {
                             /** activate an alarm service */
-                            Log.i("SmsReceiver", "Match all options");
-
                             Toast.makeText(mContext, "알람울림", Toast.LENGTH_SHORT).show();
                             doAlarmRing();
 
@@ -104,7 +100,6 @@ public class SmsReceiver extends BroadcastReceiver
                                 mAlarmAuth.getAlarmAuthor().equals(mPhoneNumber.toString()) &&
                                 isEndKeyword(alarm.getEndKeyword()))
                         {
-                            Log.i("SmsReceiver", "Match failed");
                             stopAlarmRing();
                             return;
                         }
@@ -121,11 +116,9 @@ public class SmsReceiver extends BroadcastReceiver
         {
             if (serviceClass.getName().equals(service.service.getClassName()))
             {
-                Log.i("isAlarmServiceRunning", true + "");
                 return true;
             }
         }
-        Log.i("isAlarmServiceRunning", false + "");
         return false;
     }
 
