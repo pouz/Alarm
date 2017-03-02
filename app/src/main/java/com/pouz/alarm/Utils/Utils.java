@@ -1,4 +1,4 @@
-package com.pouz.alarm.Utils;
+package com.pouz.alarm.utils;
 
 /**
  * Created by PouZ on 2017-02-20.

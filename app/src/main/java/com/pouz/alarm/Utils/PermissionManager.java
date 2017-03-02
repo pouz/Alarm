@@ -1,4 +1,4 @@
-package com.pouz.alarm.Utils;
+package com.pouz.alarm.utils;
 
 import android.app.Activity;
 import android.content.pm.PackageManager;

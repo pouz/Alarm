@@ -9,7 +9,7 @@ import android.telephony.SmsMessage;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.pouz.alarm.Utils.Utils;
+import com.pouz.alarm.utils.Utils;
 import com.pouz.alarm.data.Alarm;
 import com.pouz.alarm.data.source.AlarmsDataSource;
 import com.pouz.alarm.data.source.local.AlarmsLocalDataSource;
@@ -84,9 +84,13 @@ public class SmsReceiver extends BroadcastReceiver
                     {
                         Calendar calendar = Calendar.getInstance(Locale.getDefault());
                         int currentTime = Utils.timeToInt(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
+                        Log.i("SmsReceiver", "getAlarms - Phone number is matched");
+                        Log.i("SmsReceiver", "isMyServiceRunning? : " + isMyServiceRunning(AlarmService.class)+"");
+                        Log.i("SmsReceiver", "isAvailableDay? : " + isAvailableDay(alarm.getSetDayOfWeek())+"");
+                        Log.i("SmsReceiver", "isStartKeyword? : " + isStartKeyword(alarm.getStartKeyword())+"");
+                        Log.i("SmsReceiver", "isAvailableTime? : " + isAvailableTime(alarm.getStartTime(), alarm.getEndTime(), currentTime)+"");
 
-                        if (    !(mAlarmAuth.isIsAlarmActive()) &&
-                                !isMyServiceRunning(AlarmService.class) &&
+                        if (  !(mAlarmAuth.isIsAlarmActive()) &&
                                 isAvailableDay(alarm.getSetDayOfWeek()) &&
                                 isStartKeyword(alarm.getStartKeyword()) &&
                                 isAvailableTime(alarm.getStartTime(), alarm.getEndTime(), currentTime))
@@ -96,7 +100,7 @@ public class SmsReceiver extends BroadcastReceiver
                             doAlarmRing();
 
                             return;
-                        } else if (mAlarmAuth.isIsAlarmActive() &&
+                        } else if (//mAlarmAuth.isIsAlarmActive() &&
                                 mAlarmAuth.getAlarmAuthor().equals(mPhoneNumber.toString()) &&
                                 isEndKeyword(alarm.getEndKeyword()))
                         {

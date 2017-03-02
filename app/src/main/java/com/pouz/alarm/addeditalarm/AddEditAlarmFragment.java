@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.Preference;
@@ -23,9 +22,8 @@ import android.view.ViewGroup;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.pouz.alarm.IntroActivity;
 import com.pouz.alarm.R;
-import com.pouz.alarm.Utils.Utils;
+import com.pouz.alarm.utils.Utils;
 import com.pouz.alarm.alarms.AlarmsActivity;
 import com.pouz.alarm.data.Alarm;
 
@@ -109,23 +107,31 @@ public class AddEditAlarmFragment extends PreferenceFragmentCompat implements Ad
         findPreference("contact").setOnPreferenceClickListener(this);
         findPreference("start_keyword").setOnPreferenceChangeListener(this);
         findPreference("end_keyword").setOnPreferenceChangeListener(this);
+        findPreference("end_keyword").setDefaultValue("");
         findPreference("set_start_time").setOnPreferenceClickListener(this);
         findPreference("set_end_time").setOnPreferenceClickListener(this);
 
         mon = (CheckBoxPreference) findPreference("alarm_monday");
         mon.setOnPreferenceChangeListener(this);
+        mon.setChecked(false);
         tue = (CheckBoxPreference) findPreference("alarm_tuesday");
         tue.setOnPreferenceChangeListener(this);
+        tue.setChecked(false);
         wed = (CheckBoxPreference) findPreference("alarm_wednesday");
         wed.setOnPreferenceChangeListener(this);
+        wed.setChecked(false);
         thu = (CheckBoxPreference) findPreference("alarm_thursday");
         thu.setOnPreferenceChangeListener(this);
+        thu.setChecked(false);
         fri = (CheckBoxPreference) findPreference("alarm_friday");
         fri.setOnPreferenceChangeListener(this);
+        fri.setChecked(false);
         sat = (CheckBoxPreference) findPreference("alarm_saturday");
         sat.setOnPreferenceChangeListener(this);
+        sat.setChecked(false);
         sun = (CheckBoxPreference) findPreference("alarm_sunday");
         sun.setOnPreferenceChangeListener(this);
+        sun.setChecked(false);
 
         // TODO: change for Editmode
         mIsActivate = true;

@@ -16,9 +16,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.pouz.alarm.R;
-import com.pouz.alarm.Utils.Utils;
-import com.pouz.alarm.addeditalarm.AddEditAlarmActivity;
 import com.pouz.alarm.data.Alarm;
+import com.pouz.alarm.utils.Utils;
+import com.pouz.alarm.addeditalarm.AddEditAlarmActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,41 +27,37 @@ import java.util.List;
  * Created by PouZ on 2017-02-17.
  */
 
-public class AlarmsFragment extends Fragment implements AlarmsContract.View
-{
+public class AlarmsFragment extends Fragment implements AlarmsContract.View,
+        AlarmItemListener {
     private AlarmsContract.Presenter mPresenter;
     private AlarmAdapter mListAdapter;
-    private AlarmItemListener mAlarmItemListener = new AlarmItemListener()
-    {
-        @Override
-        public void onAlarmClick(Alarm clickedAlarm)
-        {
 
-        }
+    /** Implement ALarmItemListener */
+    @Override
+    public void onAlarmClick(Alarm clickedAlarm) {
 
-        @Override
-        public void onAlarmLongClick(Alarm longClickedAlarm)
-        {
-           mPresenter.deleteAlarm(longClickedAlarm.getID());
-        }
-    };
-
-    public static AlarmsFragment newInstance()
-    {
-        return new AlarmsFragment();
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState)
-    {
+    public void onAlarmLongClick(Alarm longClickedAlarm) {
+        mPresenter.deleteAlarm(longClickedAlarm.getID());
+    }
+
+    /** Singleton */
+    public static AlarmsFragment newInstance() {
+        return new AlarmsFragment();
+    }
+
+    /** class override */
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mListAdapter = new AlarmAdapter(new ArrayList<Alarm>(0), mAlarmItemListener);
+        mListAdapter = new AlarmAdapter(new ArrayList<Alarm>(0), this);
     }
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_alarms, container, false);
 
         ListView listView = (ListView) root.findViewById(R.id.alarms_list);
@@ -75,11 +71,9 @@ public class AlarmsFragment extends Fragment implements AlarmsContract.View
         );
 
         swipeRefreshLayout.canChildScrollUp();  // it makes to be able to scroll up
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
-        {
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onRefresh()
-            {
+            public void onRefresh() {
                 mPresenter.loadAlarms(true);
                 swipeRefreshLayout.setRefreshing(false);
             }
@@ -91,119 +85,109 @@ public class AlarmsFragment extends Fragment implements AlarmsContract.View
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
         Log.i("AlarmsFragment : ", "onResume()");
         mPresenter.start();
     }
 
+    /** Implement AlarmsContract.View */
     @Override
-    public void showAddAlarm()
-    {
+    public void showAddAlarm() {
         Log.e("showAddAlarm() ", "AlarmsFragment");
         Intent intent = new Intent(getContext(), AddEditAlarmActivity.class);
         startActivityForResult(intent, AddEditAlarmActivity.REQUEST_ADD_ALARM);
     }
 
     @Override
-    public void showAlarms(List<Alarm> alarms)
-    {
+    public void showAlarms(List<Alarm> alarms) {
         Log.i("AlarmsFragment : ", "showAlarms()");
         mListAdapter.replaceData(alarms);
     }
 
     @Override
-    public void setPresenter(AlarmsContract.Presenter presenter)
-    {
+    public void setPresenter(AlarmsContract.Presenter presenter) {
         mPresenter = presenter;
     }
 
-    private static class AlarmAdapter extends BaseAdapter
-    {
+    /** AlarmAdapter section */
+    private static class AlarmAdapter extends BaseAdapter implements
+            View.OnClickListener,
+            View.OnLongClickListener {
         private List<Alarm> mAlarms;
         private AlarmItemListener mItemListener;
+        private Alarm mAlarm;
 
-        public AlarmAdapter(List<Alarm> alarms, AlarmItemListener itemListener)
-        {
+        /** implement View.OnClickListener */
+        @Override
+        public void onClick(View v) {
+
+            mItemListener.onAlarmClick(mAlarm);
+        }
+
+        /** implement View.OnLongClickListener */
+        @Override
+        public boolean onLongClick(View v) {
+            mItemListener.onAlarmLongClick(mAlarm);
+            return false;
+        }
+
+        /** local functions */
+        public AlarmAdapter(List<Alarm> alarms, AlarmItemListener itemListener) {
             setList(alarms);
             mItemListener = itemListener;
         }
 
-        private void setList(List<Alarm> alarms)
-        {
+        private void setList(List<Alarm> alarms) {
             mAlarms = alarms;
         }
 
-        public void replaceData(List<Alarm> alarms)
-        {
+        public void replaceData(List<Alarm> alarms) {
             Log.i("AlarmsFragment : ", "replaceData()");
             setList(alarms);
             notifyDataSetChanged();
         }
 
+        /** override BaseAdapter functions */
         @Override
-        public int getCount()
-        {
+        public int getCount() {
             return mAlarms.size();
         }
 
         @Override
-        public Alarm getItem(int i)
-        {
+        public Alarm getItem(int i) {
             return mAlarms.get(i);
         }
 
         @Override
-        public long getItemId(int i)
-        {
+        public long getItemId(int i) {
             return i;
         }
 
         @Override
-        public View getView(int i, View view, ViewGroup viewGroup)
-        {
+        public View getView(int i, View view, ViewGroup viewGroup) {
             View rawView = view;
 
-            if (rawView == null)
-            {
+            if (rawView == null) {
                 // TODO: Need to study about Inflater
                 LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
                 rawView = inflater.inflate(R.layout.alarm_item, viewGroup, false);
             }
 
-            final Alarm alarm = getItem(i);
+            mAlarm = getItem(i);
 
             TextView titleAV = (TextView) rawView.findViewById(R.id.list_item_title);
-            titleAV.setText(alarm.getName() + "/" + Utils.intToTime(alarm.getStartTime()) + "~" + Utils.intToTime(alarm.getEndTime()));
+            titleAV.setText(mAlarm.getName() + "/" + Utils.intToTime(mAlarm.getStartTime()) + "~" + Utils.intToTime(mAlarm.getEndTime()));
 
-            rawView.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View view)
-                {
-                    mItemListener.onAlarmClick(alarm);
-                }
-            });
-
-            rawView.setOnLongClickListener(new View.OnLongClickListener()
-            {
-                @Override
-                public boolean onLongClick(View v)
-                {
-                    mItemListener.onAlarmLongClick(alarm);
-                    return true;
-                }
-            });
+            rawView.setOnClickListener(this);
+            rawView.setOnLongClickListener(this);
 
             return rawView;
         }
     }
+}
+interface AlarmItemListener {
+    void onAlarmClick(Alarm clickedAlarm);
 
-    public interface AlarmItemListener
-    {
-        void onAlarmClick(Alarm clickedAlarm);
-
-        void onAlarmLongClick(Alarm longClickedAlarm);
-    }
+    void onAlarmLongClick(Alarm longClickedAlarm);
 }
