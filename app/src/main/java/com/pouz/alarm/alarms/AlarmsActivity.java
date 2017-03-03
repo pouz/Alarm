@@ -17,7 +17,6 @@ import android.util.Log;
 import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.widget.ToggleButton;
 
 import com.pouz.alarm.R;
 import com.pouz.alarm.data.source.local.AlarmsLocalDataSource;
@@ -45,7 +44,6 @@ public class AlarmsActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_BOOT_COMPLETED) != PackageManager.PERMISSION_DENIED)
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECEIVE_BOOT_COMPLETED}, REQUEST_CODE_FOR_BOOT_COMPLETED);
 
-        checkDeviceAdmin();
     }
 
     @Override
@@ -83,6 +81,8 @@ public class AlarmsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.alarms_act);
+
+        checkDeviceAdmin();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.alarms_toolbar);
         setSupportActionBar(toolbar);

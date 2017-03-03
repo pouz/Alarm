@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.design.widget.Snackbar;
 import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.Preference;
@@ -184,7 +185,7 @@ public class AddEditAlarmFragment extends PreferenceFragmentCompat implements Ad
             {
                 if(newValue.toString().equals(mEndKeyword))
                 {
-                    Toast.makeText(getContext(), "Start Keyword same as End Keyword", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(getView(), "시작 키워드가 멈춤 키워드와 동일합니다.", Toast.LENGTH_SHORT).setDuration(4000).show();
                     mStartKeyword= "";
                 }
                 else
@@ -197,7 +198,7 @@ public class AddEditAlarmFragment extends PreferenceFragmentCompat implements Ad
             {
                 if(newValue.toString().equals(mStartKeyword))
                 {
-                    Toast.makeText(getContext(), "End Keyword same as Start Keyword", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(getView(), "멈춤 키워드가 시작 키워드와 동일합니다.", Toast.LENGTH_SHORT).setDuration(4000).show();
                     mEndKeyword = "";
                 }
                 else
@@ -300,5 +301,11 @@ public class AddEditAlarmFragment extends PreferenceFragmentCompat implements Ad
         getActivity().setResult(Activity.RESULT_OK); // Intent에 추가되나?
         // TODO: Need to check right here
         getActivity().finish(); // 현재 액티비티 닫음. 전 액티비티로 회귀? of something?
+    }
+
+    @Override
+    public void showAvailabilityFailed() {
+        Log.i("AddEditAlarmFragment", "showAvaulabilityFailed");
+        Snackbar.make(this.getView(), "선택항목이 유효하지 않습니다.\n다시한번 확인해 주세요.", Toast.LENGTH_LONG).setDuration(4000).show();
     }
 }

@@ -1,12 +1,14 @@
 package com.pouz.alarm.alarms;
 
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,13 +36,21 @@ public class AlarmsFragment extends Fragment implements AlarmsContract.View,
 
     /** Implement ALarmItemListener */
     @Override
-    public void onAlarmClick(Alarm clickedAlarm) {
+    public void onAlarmClick(final Alarm clickedAlarm, View view) {
 
     }
 
     @Override
-    public void onAlarmLongClick(Alarm longClickedAlarm) {
-        mPresenter.deleteAlarm(longClickedAlarm.getID());
+    public void onAlarmLongClick(final Alarm longClickedAlarm, View view) {
+        AlertDialog.Builder alt_bd = new AlertDialog.Builder(getContext());
+        alt_bd.setMessage(R.string.delete_dialog_message)
+                .setCancelable(false)
+                .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mPresenter.deleteAlarm(longClickedAlarm.getID());
+                    }
+                }).setNegativeButton("아니오", null).show();
     }
 
     /** Singleton */
@@ -62,6 +72,7 @@ public class AlarmsFragment extends Fragment implements AlarmsContract.View,
 
         ListView listView = (ListView) root.findViewById(R.id.alarms_list);
         listView.setAdapter(mListAdapter);
+        //listView.setSelector(R.drawable.selector);
 
         final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipe_layout);
         swipeRefreshLayout.setColorSchemeColors(
@@ -122,13 +133,13 @@ public class AlarmsFragment extends Fragment implements AlarmsContract.View,
         @Override
         public void onClick(View v) {
 
-            mItemListener.onAlarmClick(mAlarm);
+            mItemListener.onAlarmClick(mAlarm, v);
         }
 
         /** implement View.OnLongClickListener */
         @Override
         public boolean onLongClick(View v) {
-            mItemListener.onAlarmLongClick(mAlarm);
+            mItemListener.onAlarmLongClick(mAlarm, v);
             return false;
         }
 
@@ -185,9 +196,4 @@ public class AlarmsFragment extends Fragment implements AlarmsContract.View,
             return rawView;
         }
     }
-}
-interface AlarmItemListener {
-    void onAlarmClick(Alarm clickedAlarm);
-
-    void onAlarmLongClick(Alarm longClickedAlarm);
 }

@@ -20,6 +20,8 @@ public interface AddEditAlarmContract
          * called by saveAlarm()
          */
         void finishAddEdit();
+
+        void showAvailabilityFailed();
     }
 
     interface Presenter extends BasePresenter
@@ -31,6 +33,8 @@ public interface AddEditAlarmContract
         void saveAlarm(Alarm alarm);
 
         void updateAlarm(Alarm alarm);
+
+        boolean checkAvailability(Alarm alarm);
        
     }
 }
