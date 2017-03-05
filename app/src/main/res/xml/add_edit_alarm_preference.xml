@@ -1,76 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-                  xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory
-        android:title="알람 명령을 받을 대상을 선택하세요">
+    <PreferenceCategory android:title="알람 명령을 받을 대상을 선택하세요">
         <Preference
             android:key="contact"
-            android:title="@string/pick_the_person">
-        </Preference>
+            android:title="@string/pick_the_person"></Preference>
     </PreferenceCategory>
-    <PreferenceCategory
-        android:title="알람 키워드와 시간을 선택하세요">
+    <PreferenceCategory android:title="알람 키워드와 시간을 선택하세요">
         <EditTextPreference
+            android:defaultValue=""
             android:key="start_keyword"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:title="@string/start_keyword"/>
+            android:title="@string/start_keyword" />
         <EditTextPreference
+            android:defaultValue=""
             android:key="end_keyword"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:title="@string/end_keyword"/>
+            android:title="@string/end_keyword" />
         <Preference
             android:key="set_start_time"
-            android:title="@string/set_start_time"/>
+            android:title="@string/set_start_time" />
         <Preference
             android:key="set_end_time"
-            android:title="@string/set_end_time"/>
+            android:title="@string/set_end_time" />
     </PreferenceCategory>
-    <PreferenceCategory
-        android:title="언제 알람이 울리길 원하세요?">
+    <PreferenceCategory android:title="언제 알람이 울리길 원하세요?">
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="check_box_preference_1"
             android:title="Check box preference"
             app:key="alarm_monday"
-            app:title="@string/alarm_monday"/>
+            app:title="@string/alarm_monday" />
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="check_box_preference_7"
             android:title="Check box preference"
             app:key="alarm_tuesday"
-            app:title="@string/alarm_tuesday"/>
+            app:title="@string/alarm_tuesday" />
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="check_box_preference_6"
             android:title="Check box preference"
             app:key="alarm_wednesday"
-            app:title="@string/alarm_wednesday"/>
+            app:title="@string/alarm_wednesday" />
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="check_box_preference_5"
             android:title="Check box preference"
             app:key="alarm_thursday"
-            app:title="@string/alarm_thursday"/>
+            app:title="@string/alarm_thursday" />
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="check_box_preference_2"
             android:title="Check box preference"
             app:key="alarm_friday"
-            app:title="@string/alarm_friday"/>
+            app:title="@string/alarm_friday" />
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="check_box_preference_4"
             android:title="Check box preference"
             app:key="alarm_saturday"
-            app:title="@string/alarm_saturday"/>
+            app:title="@string/alarm_saturday" />
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="check_box_preference_3"
             android:title="Check box preference"
             app:key="alarm_sunday"
-            app:title="@string/alarm_sunday"/>
+            app:title="@string/alarm_sunday" />
     </PreferenceCategory>
 </PreferenceScreen>

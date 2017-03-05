@@ -188,7 +188,8 @@ public class AlarmsFragment extends Fragment implements AlarmsContract.View,
             mAlarm = getItem(i);
 
             TextView titleAV = (TextView) rawView.findViewById(R.id.list_item_title);
-            titleAV.setText(mAlarm.getName() + "/" + Utils.intToTime(mAlarm.getStartTime()) + "~" + Utils.intToTime(mAlarm.getEndTime()));
+            //titleAV.setText(mAlarm.getName() + "/" + Utils.intToTime(mAlarm.getStartTime()) + "~" + Utils.intToTime(mAlarm.getEndTime()));
+            titleAV.setText(mAlarm.toString());
 
             rawView.setOnClickListener(this);
             rawView.setOnLongClickListener(this);

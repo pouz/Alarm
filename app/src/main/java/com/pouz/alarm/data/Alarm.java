@@ -1,8 +1,8 @@
 package com.pouz.alarm.data;
 
-import android.icu.util.Calendar;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+
+import com.pouz.alarm.utils.Utils;
 
 /**
  * Created by PouZ on 2017-02-17.
@@ -122,6 +122,8 @@ public final class Alarm
     @Override
     public String toString()
     {
-        return mName + ":" + mPhoneNumber;
+        return "[" + mName + " : " + mPhoneNumber + "]"
+                + ", " + "[" + Utils.intToTime(mStartTime)
+                + " ~ " + Utils.intToTime(mEndTime) + "]";
     }
 }
