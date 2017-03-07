@@ -35,4 +35,6 @@ public interface AlarmsDataSource
     void deleteAlarm(@NonNull int id);
 
     void updateAlarm(@NonNull final Alarm alarm);
+
+    void reordering();
 }

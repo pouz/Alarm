@@ -51,11 +51,11 @@ public class AlarmsFragment extends Fragment implements AlarmsContract.View {
             public void onAlarmLongClick(final Alarm longClickedAlarm, View view) {
                 AlertDialog.Builder alt_db = new AlertDialog.Builder(getContext());
                 alt_db.setTitle("알람 정보")
-                        .setMessage("Name [" + longClickedAlarm.getName() + "]\n" +
-                                "Mobile [" + longClickedAlarm.getPhoneNumber() + "]\n" +
-                                "Setting Time [" + longClickedAlarm.getStartTime() + " ~ " + longClickedAlarm.getEndTime() + "]\n" +
-                                "Start Keyword [" + longClickedAlarm.getStartKeyword() + "]\n" +
-                                "End Keyword [" + longClickedAlarm.getEndKeyword() + "]\n" + longClickedAlarm.getDayOfWeek())
+                        .setMessage("이름 [" + longClickedAlarm.getName() + "]\n" +
+                                "전화번호 [" + longClickedAlarm.getPhoneNumber() + "]\n" +
+                                "설정시간 [" + Utils.intToTime(longClickedAlarm.getStartTime()) + " ~ " + Utils.intToTime(longClickedAlarm.getEndTime()) + "]\n" +
+                                "시작단어 [" + longClickedAlarm.getStartKeyword() + "]\n" +
+                                "종료단어 [" + longClickedAlarm.getEndKeyword() + "]\n" + longClickedAlarm.getDayOfWeek())
                         .setCancelable(true)
                         .setNegativeButton("수정", new DialogInterface.OnClickListener() {
                             @Override

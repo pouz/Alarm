@@ -191,4 +191,10 @@ public class AlarmsLocalDataSource implements AlarmsDataSource
 
         db.close();
     }
+
+    @Override
+    public void reordering() {
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+    }
 }

@@ -169,7 +169,7 @@ public final class Alarm implements Parcelable {
 
     public String getDayOfWeek() {
         StringBuilder sb = new StringBuilder();
-        sb.append("알람 요일 \n[");
+        sb.append("알람요일 \n[");
 
         if((mSetDayOfWeek & 1) != 0)
             sb.append(" 월 ");

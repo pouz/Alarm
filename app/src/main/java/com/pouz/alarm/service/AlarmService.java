@@ -95,6 +95,7 @@ public class AlarmService extends Service {
     @Override
     public void onDestroy()
     {
+        // TODO: 종료 시점에 쓰레드를 해지하지 않아도 서비스가 종료되면 알아서 터지나 확인
         Log.e("AlarmService", "Exit Service");
         if (mAlarmAuth.isIsAlarmActive())
         {
