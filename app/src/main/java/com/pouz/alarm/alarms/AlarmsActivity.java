@@ -19,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.pouz.alarm.R;
+import com.pouz.alarm.addeditalarm.AddEditAlarmFragment;
 import com.pouz.alarm.data.source.local.AlarmsLocalDataSource;
 import com.pouz.alarm.receiver.DeviceAdminReceiver;
 
@@ -87,13 +88,13 @@ public class AlarmsActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.alarms_toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.alarms_add_fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mAlarmPresenter.addAlarm();
-            }
-        });
+        //FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.alarms_add_fab);
+        //fab.setOnClickListener(new View.OnClickListener() {
+        //    @Override
+        //    public void onClick(View view) {
+        //        mAlarmPresenter.addAlarm(AddEditAlarmFragment.ADD_MODE);
+        //}
+        //});
 
         AlarmsFragment alarmsFragment = (AlarmsFragment) getSupportFragmentManager().findFragmentById(R.id.alarms_fragment);
         if (alarmsFragment == null) {

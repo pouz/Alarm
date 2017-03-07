@@ -60,6 +60,11 @@ public class AlarmsPresenter implements AlarmsContract.Presenter
     }
 
     @Override
+    public void editAlarm(final int mode, final Alarm alarm) {
+        mAlarmsView.showEditAlarm(mode, alarm);
+    }
+
+    @Override
     public void deleteAlarm(int id)
     {
         mAlarmsLocalDataSource.deleteAlarm(id);

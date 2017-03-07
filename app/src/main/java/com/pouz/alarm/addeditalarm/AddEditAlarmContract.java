@@ -22,6 +22,10 @@ public interface AddEditAlarmContract
         void finishAddEdit();
 
         void showAvailabilityFailed();
+
+        void showToast(final String string);
+
+        int getMode();
     }
 
     interface Presenter extends BasePresenter
@@ -32,9 +36,9 @@ public interface AddEditAlarmContract
 
         void saveAlarm(Alarm alarm);
 
-        void updateAlarm(Alarm alarm);
-
         boolean checkAvailability(Alarm alarm);
+
+        boolean isNewAlarm();
        
     }
 }

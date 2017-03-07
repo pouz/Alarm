@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:title="Add"
+    <item android:title="@string/add_confirm"
           android:id="@+id/menu_add_alarm"
           app:showAsAction="always"/>
 </menu>

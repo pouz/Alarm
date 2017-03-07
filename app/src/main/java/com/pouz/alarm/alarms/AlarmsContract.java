@@ -17,12 +17,16 @@ public interface AlarmsContract
     {
         void showAddAlarm();
 
+        void showEditAlarm(final int mode, final Alarm alarm);
+
         void showAlarms(List<Alarm> alarms);
     }
 
     interface Presenter extends BasePresenter
     {
         void addAlarm();
+
+        void editAlarm(final int mode, final Alarm alarm);
 
         void loadAlarms(boolean forcedLoad);
 

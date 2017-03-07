@@ -23,6 +23,8 @@
 
 
     <string name="delete_dialog_message">알람을 삭제 하시겠습니까?</string>
+    <string name="add_confirm">추가</string>
+    <string name="edit_confirm">완료</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

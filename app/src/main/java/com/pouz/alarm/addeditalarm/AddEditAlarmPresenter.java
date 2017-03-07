@@ -1,7 +1,6 @@
 package com.pouz.alarm.addeditalarm;
 
 import android.support.annotation.Nullable;
-import android.widget.Toast;
 
 import com.pouz.alarm.data.Alarm;
 import com.pouz.alarm.data.source.AlarmsDataSource;
@@ -16,9 +15,9 @@ public class AddEditAlarmPresenter implements AddEditAlarmContract.Presenter {
     @Nullable
     private AlarmsDataSource mRepository;
 
-    public AddEditAlarmPresenter(@Nullable AlarmsDataSource mRepository, @Nullable AddEditAlarmContract.View mView) {
-        this.mRepository = mRepository;
-        this.mView = mView;
+    public AddEditAlarmPresenter(@Nullable final AlarmsDataSource repository, @Nullable final AddEditAlarmContract.View view) {
+        this.mRepository = repository;
+        this.mView = view;
     }
 
     @Override
@@ -50,22 +49,22 @@ public class AddEditAlarmPresenter implements AddEditAlarmContract.Presenter {
     @Override
     public void saveAlarm(Alarm alarm) {
         if (checkAvailability(alarm)) {
-            if (isNewAlarm())
+            if (isNewAlarm()) {
                 mRepository.saveAlarm(alarm);
-            else
-                updateAlarm(alarm);
+                mView.showToast("Save Done.");
+            }
+            else {
+                mRepository.updateAlarm(alarm);
+                mView.showToast("Update Done");
+            }
+
             mView.finishAddEdit();
         } else {
             mView.showAvailabilityFailed();
         }
     }
 
-    @Override
-    public void updateAlarm(Alarm alarm) {
-
-    }
-
     public boolean isNewAlarm() {
-        return true;
+        return (mView.getMode() == AddEditAlarmFragment.ADD_MODE) ? true : false;
     }
 }

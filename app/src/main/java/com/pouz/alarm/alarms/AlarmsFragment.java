@@ -1,10 +1,10 @@
 package com.pouz.alarm.alarms;
 
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -18,8 +18,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.pouz.alarm.R;
+import com.pouz.alarm.addeditalarm.AddEditAlarmFragment;
 import com.pouz.alarm.data.Alarm;
-import com.pouz.alarm.utils.Utils;
 import com.pouz.alarm.addeditalarm.AddEditAlarmActivity;
 
 import java.util.ArrayList;
@@ -29,40 +29,50 @@ import java.util.List;
  * Created by PouZ on 2017-02-17.
  */
 
-public class AlarmsFragment extends Fragment implements AlarmsContract.View,
-        AlarmItemListener {
+public class AlarmsFragment extends Fragment implements AlarmsContract.View {
+
     private AlarmsContract.Presenter mPresenter;
     private AlarmAdapter mListAdapter;
 
-    /** Implement ALarmItemListener */
-    @Override
-    public void onAlarmClick(final Alarm clickedAlarm, View view) {
-
-    }
-
-    @Override
-    public void onAlarmLongClick(final Alarm longClickedAlarm, View view) {
-        AlertDialog.Builder alt_bd = new AlertDialog.Builder(getContext());
-        alt_bd.setMessage(R.string.delete_dialog_message)
-                .setCancelable(false)
-                .setPositiveButton("예", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        mPresenter.deleteAlarm(longClickedAlarm.getID());
-                    }
-                }).setNegativeButton("아니오", null).show();
-    }
-
-    /** Singleton */
     public static AlarmsFragment newInstance() {
         return new AlarmsFragment();
     }
 
-    /** class override */
+    /**
+     * class override
+     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mListAdapter = new AlarmAdapter(new ArrayList<Alarm>(0), this);
+        mListAdapter = new AlarmAdapter(new ArrayList<Alarm>(0), new AlarmItemListener() {
+            @Override
+            public void onAlarmLongClick(final Alarm longClickedAlarm, View view) {
+                AlertDialog.Builder alt_db = new AlertDialog.Builder(getContext());
+                alt_db.setTitle("알람 정보")
+                        .setMessage(longClickedAlarm.toString())
+                        .setCancelable(true)
+                        .setNegativeButton("수정", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mPresenter.editAlarm(AddEditAlarmFragment.EDIT_MODE, longClickedAlarm);
+                            }
+                        }).setPositiveButton("삭제", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        AlertDialog.Builder alt_db = new AlertDialog.Builder(getContext());
+                        alt_db.setTitle("삭제")
+                                .setMessage("정말로 삭제 하시겠습니까?")
+                                .setCancelable(true)
+                                .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        mPresenter.deleteAlarm(longClickedAlarm.getID());
+                                    }
+                                }).setNegativeButton("아니오", null).show();
+                    }
+                }).show();
+            }
+        });
     }
 
     @Nullable
@@ -73,6 +83,14 @@ public class AlarmsFragment extends Fragment implements AlarmsContract.View,
         ListView listView = (ListView) root.findViewById(R.id.alarms_list);
         listView.setAdapter(mListAdapter);
         //listView.setSelector(R.drawable.selector);
+
+        FloatingActionButton fab = (FloatingActionButton) root.findViewById(R.id.alarms_add_fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mPresenter.addAlarm();
+            }
+        });
 
         final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipe_layout);
         swipeRefreshLayout.setColorSchemeColors(
@@ -102,12 +120,23 @@ public class AlarmsFragment extends Fragment implements AlarmsContract.View,
         mPresenter.start();
     }
 
-    /** Implement AlarmsContract.View */
+    /**
+     * Implement AlarmsContract.View
+     */
     @Override
     public void showAddAlarm() {
         Log.e("showAddAlarm() ", "AlarmsFragment");
         Intent intent = new Intent(getContext(), AddEditAlarmActivity.class);
-        startActivityForResult(intent, AddEditAlarmActivity.REQUEST_ADD_ALARM);
+        intent.putExtra("mode", AddEditAlarmFragment.ADD_MODE);
+        startActivity(intent);
+    }
+
+    @Override
+    public void showEditAlarm(int mode, Alarm alarm) {
+        Intent intent = new Intent(getContext(), AddEditAlarmActivity.class);
+        intent.putExtra("mode", AddEditAlarmFragment.EDIT_MODE);
+        intent.putExtra("alarm", alarm);
+        startActivity(intent);
     }
 
     @Override
@@ -121,29 +150,19 @@ public class AlarmsFragment extends Fragment implements AlarmsContract.View,
         mPresenter = presenter;
     }
 
-    /** AlarmAdapter section */
-    private static class AlarmAdapter extends BaseAdapter implements
-            View.OnClickListener,
-            View.OnLongClickListener {
+    /**
+     * AlarmAdapter section
+     */
+    private static class AlarmAdapter extends BaseAdapter //implements
+            //View.OnClickListener,
+            //View.OnLongClickListener {
+    {
         private List<Alarm> mAlarms;
         private AlarmItemListener mItemListener;
-        private Alarm mAlarm;
 
-        /** implement View.OnClickListener */
-        @Override
-        public void onClick(View v) {
-
-            mItemListener.onAlarmClick(mAlarm, v);
-        }
-
-        /** implement View.OnLongClickListener */
-        @Override
-        public boolean onLongClick(View v) {
-            mItemListener.onAlarmLongClick(mAlarm, v);
-            return false;
-        }
-
-        /** local functions */
+        /**
+         * local functions
+         */
         public AlarmAdapter(List<Alarm> alarms, AlarmItemListener itemListener) {
             setList(alarms);
             mItemListener = itemListener;
@@ -159,7 +178,9 @@ public class AlarmsFragment extends Fragment implements AlarmsContract.View,
             notifyDataSetChanged();
         }
 
-        /** override BaseAdapter functions */
+        /**
+         * override BaseAdapter functions
+         */
         @Override
         public int getCount() {
             return mAlarms.size();
@@ -185,16 +206,28 @@ public class AlarmsFragment extends Fragment implements AlarmsContract.View,
                 rawView = inflater.inflate(R.layout.alarm_item, viewGroup, false);
             }
 
-            mAlarm = getItem(i);
+            // 전에는 mAlarm에 다이렉트로했는데 안됨. 멤버변수말고 지역변수로 하니 됨
+            // 중간에 mAlarm을 뭔가 건드리는 가봄...
+            final Alarm alarm = getItem(i);
+
+            //mAlarm = getItem(i);
 
             TextView titleAV = (TextView) rawView.findViewById(R.id.list_item_title);
-            //titleAV.setText(mAlarm.getName() + "/" + Utils.intToTime(mAlarm.getStartTime()) + "~" + Utils.intToTime(mAlarm.getEndTime()));
-            titleAV.setText(mAlarm.toString());
+            titleAV.setText(alarm.toString());
 
-            rawView.setOnClickListener(this);
-            rawView.setOnLongClickListener(this);
+            rawView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    mItemListener.onAlarmLongClick(alarm, v);
+                    return true;
+                }
+            });
 
             return rawView;
         }
+    }
+
+    interface AlarmItemListener {
+        void onAlarmLongClick(Alarm longClickedAlarm, View view);
     }
 }

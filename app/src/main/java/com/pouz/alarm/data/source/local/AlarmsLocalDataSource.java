@@ -158,6 +158,25 @@ public class AlarmsLocalDataSource implements AlarmsDataSource
     }
 
     @Override
+    public void updateAlarm(@NonNull Alarm alarm) {
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(AlarmEntry.COLUMN_NAME_PHONE_NUMBER, alarm.getPhoneNumber());
+        values.put(AlarmEntry.COLUMN_NAME_NAME, alarm.getName());
+        values.put(AlarmEntry.COLUMN_NAME_START_TIME, alarm.getStartTime());
+        values.put(AlarmEntry.COLUMN_NAME_END_TIME, alarm.getEndTime());
+        values.put(AlarmEntry.COLUMN_NAME_START_KEYWORD, alarm.getStartKeyword());
+        values.put(AlarmEntry.COLUMN_NAME_END_KEYWORD, alarm.getEndKeyword());
+        values.put(AlarmEntry.COLUMN_NAME_SET_DAY_OF_WEEK, alarm.getSetDayOfWeek());
+        values.put(AlarmEntry.COLUMN_NAME_IS_ACTIVATE, alarm.isActivate());
+
+        db.update(AlarmEntry.TABLE_NAME, values, "id=?", new String[]{Integer.toString(alarm.getID())});
+
+        db.close();
+    }
+
+    @Override
     //public void deleteAlarm(@NonNull String phoneNum)
     public void deleteAlarm(@NonNull int id)
     {
