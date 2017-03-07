@@ -1,20 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="?android:attr/listPreferredItemHeight"
-    android:layout_margin="@dimen/alarm_list_margin"
     android:foreground="?android:selectableItemBackground"
-    android:orientation="horizontal"
-    android:paddingBottom="@dimen/list_item_padding"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/list_item_padding">
+    android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/list_item_title"
-        android:layout_width="match_parent"
+    <ImageView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+        app:srcCompat="@drawable/ic_action_name"
+        android:id="@+id/list_activation_check"
+        android:padding="16dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="20dp" />
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical">
+
+            <TextView
+                android:id="@+id/list_item_time"
+                android:text="Time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+            <TextView
+                android:id="@+id/list_item_name"
+                android:text="name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+        </LinearLayout>
+    </android.support.design.widget.CoordinatorLayout>
+
 </LinearLayout>

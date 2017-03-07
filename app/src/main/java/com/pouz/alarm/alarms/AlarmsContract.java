@@ -31,5 +31,7 @@ public interface AlarmsContract
         void loadAlarms(boolean forcedLoad);
 
         void deleteAlarm(int id);
+
+        void updateAlarm(final Alarm alarm);
     }
 }

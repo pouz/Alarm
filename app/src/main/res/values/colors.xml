@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#25282b</color>
-    <color name="colorPrimaryDark">#545659</color>
+    <color name="colorPrimaryDark">#b2b2b2</color>
     <color name="colorAccent">#418e9f</color>
 
     <color name="pouzColorGray">#3e3e3e</color>

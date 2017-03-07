@@ -67,11 +67,11 @@ public class SmsReceiver extends BroadcastReceiver
                 mPhoneNumber.append(smsMessage.getOriginatingAddress());
             }
             Toast.makeText(context, "SMS : " + mMessageBody + " From " + mPhoneNumber, Toast.LENGTH_SHORT).show();
-            getAlarms();
+            doAlarms();
         }
     }
 
-    private void getAlarms()
+    private void doAlarms()
     {
         mAlarmsLocalDataSource.getAlarms(new AlarmsDataSource.LoadAlarmsCallBack()
         {
@@ -91,6 +91,7 @@ public class SmsReceiver extends BroadcastReceiver
                         Log.i("SmsReceiver", "isAvailableTime? : " + isAvailableTime(alarm.getStartTime(), alarm.getEndTime(), currentTime)+"");
 
                         if (  !(mAlarmAuth.isIsAlarmActive()) &&
+                                alarm.isActivate() &&
                                 isAvailableDay(alarm.getSetDayOfWeek()) &&
                                 isStartKeyword(alarm.getStartKeyword()) &&
                                 isAvailableTime(alarm.getStartTime(), alarm.getEndTime(), currentTime))
@@ -100,8 +101,7 @@ public class SmsReceiver extends BroadcastReceiver
                             doAlarmRing();
 
                             return;
-                        } else if (//mAlarmAuth.isIsAlarmActive() &&
-                                mAlarmAuth.getAlarmAuthor().equals(mPhoneNumber.toString()) &&
+                        } else if (mAlarmAuth.getAlarmAuthor().equals(mPhoneNumber.toString()) &&
                                 isEndKeyword(alarm.getEndKeyword()))
                         {
                             stopAlarmRing();

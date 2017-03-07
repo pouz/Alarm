@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_intro"
     android:layout_width="match_parent"
@@ -9,13 +10,14 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.pouz.alarm.IntroActivity">
+    tools:context="com.pouz.alarm.IntroActivity"
+    android:background="@color/colorPrimary">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/app_title"
+    <ImageView
+        app:srcCompat="@mipmap/alarm"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:id="@+id/app_title"/>
+        android:id="@+id/imageView"
+        android:layout_width="150dp"
+        android:layout_height="150dp" />
 </RelativeLayout>

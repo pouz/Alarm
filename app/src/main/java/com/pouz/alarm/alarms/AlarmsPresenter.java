@@ -18,7 +18,6 @@ public class AlarmsPresenter implements AlarmsContract.Presenter
 {
     private final AlarmsLocalDataSource mAlarmsLocalDataSource;
     private final AlarmsContract.View mAlarmsView;
-    private boolean mFirstLoad = true;
 
     public AlarmsPresenter(@Nullable  AlarmsLocalDataSource alarmsLocalDataSource, @Nullable AlarmsContract.View alarmsView)
     {
@@ -69,5 +68,11 @@ public class AlarmsPresenter implements AlarmsContract.Presenter
     {
         mAlarmsLocalDataSource.deleteAlarm(id);
         loadAlarms(true);
+    }
+
+    @Override
+    public void updateAlarm(Alarm alarm) {
+        // TODO: 최적화 해야함. 예를 들어 activation만 변한다면 데이터베이스 업데이트를 해당하는 것만 하게 만들어야 할듯
+        mAlarmsLocalDataSource.updateAlarm(alarm);
     }
 }

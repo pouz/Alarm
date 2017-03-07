@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -21,6 +22,7 @@ import com.pouz.alarm.R;
 import com.pouz.alarm.addeditalarm.AddEditAlarmFragment;
 import com.pouz.alarm.data.Alarm;
 import com.pouz.alarm.addeditalarm.AddEditAlarmActivity;
+import com.pouz.alarm.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +51,11 @@ public class AlarmsFragment extends Fragment implements AlarmsContract.View {
             public void onAlarmLongClick(final Alarm longClickedAlarm, View view) {
                 AlertDialog.Builder alt_db = new AlertDialog.Builder(getContext());
                 alt_db.setTitle("알람 정보")
-                        .setMessage(longClickedAlarm.toString())
+                        .setMessage("Name [" + longClickedAlarm.getName() + "]\n" +
+                                "Mobile [" + longClickedAlarm.getPhoneNumber() + "]\n" +
+                                "Setting Time [" + longClickedAlarm.getStartTime() + " ~ " + longClickedAlarm.getEndTime() + "]\n" +
+                                "Start Keyword [" + longClickedAlarm.getStartKeyword() + "]\n" +
+                                "End Keyword [" + longClickedAlarm.getEndKeyword() + "]\n" + longClickedAlarm.getDayOfWeek())
                         .setCancelable(true)
                         .setNegativeButton("수정", new DialogInterface.OnClickListener() {
                             @Override
@@ -72,7 +78,7 @@ public class AlarmsFragment extends Fragment implements AlarmsContract.View {
                     }
                 }).show();
             }
-        });
+        }, mPresenter);
     }
 
     @Nullable
@@ -154,18 +160,21 @@ public class AlarmsFragment extends Fragment implements AlarmsContract.View {
      * AlarmAdapter section
      */
     private static class AlarmAdapter extends BaseAdapter //implements
-            //View.OnClickListener,
-            //View.OnLongClickListener {
     {
         private List<Alarm> mAlarms;
         private AlarmItemListener mItemListener;
+        private AlarmsContract.Presenter mPresenter;
+
+        private static final int MAX_ALPHA = 200;
+        private static final int MIN_ALPHA = 30;
 
         /**
          * local functions
          */
-        public AlarmAdapter(List<Alarm> alarms, AlarmItemListener itemListener) {
+        public AlarmAdapter(final List<Alarm> alarms, final AlarmItemListener itemListener, final AlarmsContract.Presenter presenter) {
             setList(alarms);
             mItemListener = itemListener;
+            mPresenter = presenter;
         }
 
         private void setList(List<Alarm> alarms) {
@@ -212,8 +221,32 @@ public class AlarmsFragment extends Fragment implements AlarmsContract.View {
 
             //mAlarm = getItem(i);
 
-            TextView titleAV = (TextView) rawView.findViewById(R.id.list_item_title);
-            titleAV.setText(alarm.toString());
+            final TextView timeAV = (TextView) rawView.findViewById(R.id.list_item_time);
+            final TextView nameAV = (TextView) rawView.findViewById(R.id.list_item_name);
+            final ImageView activationIV = (ImageView) rawView.findViewById(R.id.list_activation_check);
+
+            timeAV.setText(Utils.intToTime(alarm.getStartTime()) + " - " + Utils.intToTime(alarm.getEndTime()));
+            nameAV.setText(alarm.getName() + " [" + alarm.getPhoneNumber() + "]");
+
+            if (alarm.isActivate()) {
+                activationIV.setAlpha(MAX_ALPHA);
+            } else {
+                activationIV.setAlpha(MIN_ALPHA);
+            }
+            activationIV.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (alarm.isActivate()) {
+                        alarm.setIsActivate(false);
+                        activationIV.setAlpha(MIN_ALPHA);
+
+                    } else {
+                        alarm.setIsActivate(true);
+                        activationIV.setAlpha(MAX_ALPHA);
+                    }
+                    mPresenter.updateAlarm(alarm);
+                }
+            });
 
             rawView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override

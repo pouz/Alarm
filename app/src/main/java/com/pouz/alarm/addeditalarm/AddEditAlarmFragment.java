@@ -144,11 +144,11 @@ public class AddEditAlarmFragment extends PreferenceFragmentCompat implements Ad
                 /** add logic to check a alarm set is correct */
                 mPresenter.saveAlarm(mAlarm);
                 return true;
-            case android.R.id.home:
-                Intent intent = new Intent(getContext(), AlarmsActivity.class);
-                startActivity(intent);
+            //case android.R.id.home:
+            //    Intent intent = new Intent(getContext(), AlarmsActivity.class);
+            //    startActivity(intent);
 
-                return true;
+            //    return true;
         }
         return false;
     }
@@ -308,21 +308,20 @@ public class AddEditAlarmFragment extends PreferenceFragmentCompat implements Ad
     }
 
     @Override
-    public void showTimePicker(String key) {
+    public void showTimePicker(final String key) {
         // TODO: Need to change implements style
-        final String k = key;
         // TODO: set selected time on edit mode
         Date date = new Date(System.currentTimeMillis());
         new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int i, int i1) {
-                switch (k) {
+                switch (key) {
                     case "set_start_time":
-                        findPreference(k).setSummary(Utils.intToTime(Utils.timeToInt(i, i1)));
+                        findPreference(key).setSummary(Utils.intToTime(Utils.timeToInt(i, i1)));
                         mAlarm.setStartTime(Utils.timeToInt(i, i1));
                         break;
                     case "set_end_time":
-                        findPreference(k).setSummary(Utils.intToTime(Utils.timeToInt(i, i1)));
+                        findPreference(key).setSummary(Utils.intToTime(Utils.timeToInt(i, i1)));
                         mAlarm.setEndTime(Utils.timeToInt(i, i1));
                         break;
                 }

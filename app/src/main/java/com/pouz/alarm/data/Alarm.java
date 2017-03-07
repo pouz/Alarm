@@ -11,107 +11,80 @@ import com.pouz.alarm.utils.Utils;
  */
 
 public final class Alarm implements Parcelable {
-    public static final int MON = 1;
-    public static final int TUE = 2;
-    public static final int WED = 4;
-    public static final int THU = 8;
-    public static final int FRI = 16;
-    public static final int SAT = 32;
-    public static final int SUN = 64;
-
-    @NonNull
     private int mId;
-    @NonNull
     private int mStartTime;
-    @NonNull
     private int mEndTime;
-    @NonNull
     private String mName;
-    @NonNull
     private String mPhoneNumber;
-    @NonNull
     private String mStartKeyword;
-    @NonNull
     private String mEndKeyword;
-    @NonNull
     private int mSetDayOfWeek;
-    @NonNull
     private boolean mIsActivate;
 
-    public void setSetDayOfWeek(@NonNull int mSetDayOfWeek) {
+    public void setSetDayOfWeek(int mSetDayOfWeek) {
         this.mSetDayOfWeek = mSetDayOfWeek;
     }
 
-    public void setStartTime(@NonNull int mStartTime) {
+    public void setStartTime(int mStartTime) {
         this.mStartTime = mStartTime;
     }
 
-    public void setEndTime(@NonNull int mEndTime) {
+    public void setEndTime(int mEndTime) {
         this.mEndTime = mEndTime;
     }
 
-    public void setName(@NonNull String mName) {
+    public void setName(String mName) {
         this.mName = mName;
     }
 
-    public void setPhoneNumber(@NonNull String mPhoneNumber) {
+    public void setPhoneNumber(String mPhoneNumber) {
         this.mPhoneNumber = mPhoneNumber;
     }
 
-    public void setStartKeyword(@NonNull String mStartKeyword) {
+    public void setStartKeyword(String mStartKeyword) {
         this.mStartKeyword = mStartKeyword;
     }
 
-    public void setEndKeyword(@NonNull String mEndKeyword) {
+    public void setEndKeyword(String mEndKeyword) {
         this.mEndKeyword = mEndKeyword;
     }
 
-    public void setIsActivate(@NonNull boolean mIsActivate) {
+    public void setIsActivate(boolean mIsActivate) {
         this.mIsActivate = mIsActivate;
     }
 
-    @NonNull
     public int getID() {
         return mId;
     }
 
-    @NonNull
     public boolean isActivate() {
         return mIsActivate;
     }
 
-    @NonNull
     public int getSetDayOfWeek() {
         return mSetDayOfWeek;
     }
 
-
-    @NonNull
     public int getStartTime() {
         return mStartTime;
     }
 
-    @NonNull
     public int getEndTime() {
         return mEndTime;
     }
 
-    @NonNull
     public String getName() {
         return mName;
     }
 
-    @NonNull
     public String getPhoneNumber() {
         return mPhoneNumber;
     }
 
-    @NonNull
     public String getStartKeyword() {
         return mStartKeyword;
     }
 
-    @NonNull
     public String getEndKeyword() {
         return mEndKeyword;
     }
@@ -125,7 +98,7 @@ public final class Alarm implements Parcelable {
         this.mStartKeyword = "";
         this.mEndKeyword = "";
         this.mSetDayOfWeek = 0;
-        this.mIsActivate = false;
+        this.mIsActivate = true;
     }
 
     public Alarm(@NonNull int mStartTime, @NonNull int mEndTime, @NonNull String mName, @NonNull String mPhoneNumber, @NonNull String mStartKeyword,
@@ -192,5 +165,28 @@ public final class Alarm implements Parcelable {
         return "[" + mName + "]"
                 + ", " + "[" + Utils.intToTime(mStartTime)
                 + " ~ " + Utils.intToTime(mEndTime) + "]";
+    }
+
+    public String getDayOfWeek() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("알람 요일 \n[");
+
+        if((mSetDayOfWeek & 1) != 0)
+            sb.append(" 월 ");
+        if((mSetDayOfWeek & 2) != 0)
+            sb.append(" 화 ");
+        if((mSetDayOfWeek & 4) != 0)
+            sb.append(" 수 ");
+        if((mSetDayOfWeek & 8) != 0)
+            sb.append(" 목 ");
+        if((mSetDayOfWeek & 16) != 0)
+            sb.append(" 금 ");
+        if((mSetDayOfWeek & 32) != 0)
+            sb.append(" 토 ");
+        if((mSetDayOfWeek & 64) != 0)
+            sb.append(" 일 ");
+
+        sb.append("]");
+        return sb.toString();
     }
 }

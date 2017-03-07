@@ -54,4 +54,11 @@ public class AddEditAlarmActivity extends AppCompatActivity
                new AddEditAlarmPresenter(AlarmsLocalDataSource.getInstance(getApplicationContext()), addEditAlarmFragment);
         addEditAlarmFragment.setPresenter(mPresenter);
     }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
 }
