@@ -1,5 +1,7 @@
 package com.pouz.alarm.alarms;
 
+import android.content.Context;
+
 import com.pouz.alarm.BasePresenter;
 import com.pouz.alarm.BaseView;
 import com.pouz.alarm.data.Alarm;
@@ -20,6 +22,8 @@ public interface AlarmsContract
         void showEditAlarm(final int mode, final Alarm alarm);
 
         void showAlarms(List<Alarm> alarms);
+
+        void showSnackbar(final String string);
     }
 
     interface Presenter extends BasePresenter
@@ -33,5 +37,7 @@ public interface AlarmsContract
         void deleteAlarm(int id);
 
         void updateAlarm(final Alarm alarm);
+
+        void notifyToUser(final String string);
     }
 }

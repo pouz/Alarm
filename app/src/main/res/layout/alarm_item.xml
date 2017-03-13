@@ -1,44 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="?android:attr/listPreferredItemHeight"
-    android:foreground="?android:selectableItemBackground"
-    android:orientation="horizontal">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="?android:attr/listPreferredItemHeight"
+              android:foreground="?android:selectableItemBackground"
+              android:orientation="horizontal">
 
     <ImageView
+        android:id="@+id/list_activation_check"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_action_name"
-        android:id="@+id/list_activation_check"
-        android:padding="16dp"
         android:layout_marginLeft="30dp"
-        android:layout_marginRight="20dp" />
+        android:layout_marginRight="20dp"
+        android:padding="16dp"
+        app:srcCompat="@drawable/ic_action_name"/>
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="left|center_vertical">
+            android:layout_gravity="left|center_vertical"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/list_item_time"
-                android:text="Time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+                android:text="Time"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
 
             <TextView
                 android:id="@+id/list_item_name"
-                android:text="name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+                android:text="name"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"/>
         </LinearLayout>
     </android.support.design.widget.CoordinatorLayout>
 

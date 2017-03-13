@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -19,10 +20,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.pouz.alarm.R;
-import com.pouz.alarm.addeditalarm.AddEditAlarmFragment;
 import com.pouz.alarm.data.Alarm;
-import com.pouz.alarm.addeditalarm.AddEditAlarmActivity;
 import com.pouz.alarm.utils.Utils;
+import com.pouz.alarm.service.AlarmState;
+import com.pouz.alarm.addeditalarm.AddEditAlarmActivity;
+import com.pouz.alarm.addeditalarm.AddEditAlarmFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,7 +90,6 @@ public class AlarmsFragment extends Fragment implements AlarmsContract.View {
 
         ListView listView = (ListView) root.findViewById(R.id.alarms_list);
         listView.setAdapter(mListAdapter);
-        //listView.setSelector(R.drawable.selector);
 
         FloatingActionButton fab = (FloatingActionButton) root.findViewById(R.id.alarms_add_fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -97,6 +98,7 @@ public class AlarmsFragment extends Fragment implements AlarmsContract.View {
                 mPresenter.addAlarm();
             }
         });
+
 
         final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipe_layout);
         swipeRefreshLayout.setColorSchemeColors(
@@ -207,19 +209,10 @@ public class AlarmsFragment extends Fragment implements AlarmsContract.View {
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
-            View rawView = view;
 
-            if (rawView == null) {
-                // TODO: Need to study about Inflater
-                LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-                rawView = inflater.inflate(R.layout.alarm_item, viewGroup, false);
-            }
+            View rawView = getViewFromInflaterIfViewIsNull(viewGroup, view);
 
-            // 전에는 mAlarm에 다이렉트로했는데 안됨. 멤버변수말고 지역변수로 하니 됨
-            // 중간에 mAlarm을 뭔가 건드리는 가봄...
             final Alarm alarm = getItem(i);
-
-            //mAlarm = getItem(i);
 
             final TextView timeAV = (TextView) rawView.findViewById(R.id.list_item_time);
             final TextView nameAV = (TextView) rawView.findViewById(R.id.list_item_name);
@@ -233,34 +226,56 @@ public class AlarmsFragment extends Fragment implements AlarmsContract.View {
             } else {
                 activationIV.setAlpha(MIN_ALPHA);
             }
+
             activationIV.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (alarm.isActivate()) {
-                        alarm.setIsActivate(false);
-                        activationIV.setAlpha(MIN_ALPHA);
+                    if (!AlarmState.getInstance().isAlarmAuthor(alarm)) {
+                        if (alarm.isActivate()) {
+                            alarm.setIsActivate(false);
+                            activationIV.setAlpha(MIN_ALPHA);
 
+                        } else {
+                            alarm.setIsActivate(true);
+                            activationIV.setAlpha(MAX_ALPHA);
+                        }
+
+                        mPresenter.updateAlarm(alarm);
                     } else {
-                        alarm.setIsActivate(true);
-                        activationIV.setAlpha(MAX_ALPHA);
+                        mPresenter.notifyToUser("알람을 울린 사용자의 알람은 울림 도중에 수정 및 삭제를 할 수 없습니다!");
                     }
-                    mPresenter.updateAlarm(alarm);
                 }
             });
 
             rawView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    mItemListener.onAlarmLongClick(alarm, v);
+                    if (!AlarmState.getInstance().isAlarmAuthor(alarm)) {
+                        mItemListener.onAlarmLongClick(alarm, v);
+                    } else {
+                        mPresenter.notifyToUser("알람을 울린 사용자의 알람은 울림 도중에 수정 및 삭제를 할 수 없습니다!");
+                    }
                     return true;
                 }
             });
-
             return rawView;
+        }
+
+        private View getViewFromInflaterIfViewIsNull(ViewGroup viewGroup, View view) {
+            if (view == null) {
+                LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
+                view = inflater.inflate(R.layout.alarm_item, viewGroup, false);
+            }
+            return view;
         }
     }
 
     interface AlarmItemListener {
         void onAlarmLongClick(Alarm longClickedAlarm, View view);
+    }
+
+    @Override
+    public void showSnackbar(String string) {
+        Snackbar.make(getView(), string, Snackbar.LENGTH_LONG).setDuration(2000).show();
     }
 }

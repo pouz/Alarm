@@ -75,4 +75,9 @@ public class AlarmsPresenter implements AlarmsContract.Presenter
         // TODO: 최적화 해야함. 예를 들어 activation만 변한다면 데이터베이스 업데이트를 해당하는 것만 하게 만들어야 할듯
         mAlarmsLocalDataSource.updateAlarm(alarm);
     }
+
+    @Override
+    public void notifyToUser(final String string) {
+        mAlarmsView.showSnackbar(string);
+    }
 }

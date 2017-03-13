@@ -8,36 +8,35 @@
     android:layout_height="match_parent"
     tools:context=".alarms.AlarmsActivity">
 
-
-
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
 
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/alarms_appbar"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <android.support.v7.widget.Toolbar
-                android:title="MainActivity"
+                android:id="@+id/alarms_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:background="?attr/colorPrimary"
-                android:theme="?attr/actionBarTheme"
                 android:minHeight="?attr/actionBarSize"
-                android:id="@+id/alarms_toolbar"
-                android:layout_weight="1" />
+                android:theme="?attr/actionBarTheme"
+                android:title="MainActivity"/>
         </android.support.design.widget.AppBarLayout>
 
         <FrameLayout
+            android:id="@+id/alarms_fragment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/alarms_fragment">
+            android:layout_height="match_parent">
 
         </FrameLayout>
+
 
     </LinearLayout>
 

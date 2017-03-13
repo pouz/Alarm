@@ -13,7 +13,7 @@ import com.pouz.alarm.utils.Utils;
 import com.pouz.alarm.data.Alarm;
 import com.pouz.alarm.data.source.AlarmsDataSource;
 import com.pouz.alarm.data.source.local.AlarmsLocalDataSource;
-import com.pouz.alarm.service.AlarmAuth;
+import com.pouz.alarm.service.AlarmState;
 import com.pouz.alarm.service.AlarmService;
 
 import java.util.Calendar;
@@ -24,8 +24,11 @@ import java.util.Locale;
  * Created by PouZ on 2017-02-22.
  */
 
-public class SmsReceiver extends BroadcastReceiver
-{
+public class SmsReceiver extends BroadcastReceiver {
+    private static final int AVAILABLE_AND_ALARM_START = 1;
+    private static final int AVAILABLE_AND_ALARM_END = 0;
+    private static final int NO_AVAILABLE = -1;
+
     private static final String SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
     private AlarmsLocalDataSource mAlarmsLocalDataSource;
     private Context mContext;
@@ -33,22 +36,19 @@ public class SmsReceiver extends BroadcastReceiver
     private StringBuilder mPhoneNumber;
     private StringBuilder mMessageBody;
 
-    private AlarmAuth mAlarmAuth;
-
+    private AlarmState mAlarmState;
 
 
     @Override
-    public void onReceive(Context context, Intent intent)
-    {
+    public void onReceive(Context context, Intent intent) {
         mAlarmsLocalDataSource = AlarmsLocalDataSource.getInstance(context);
         mContext = context;
-        mAlarmAuth = AlarmAuth.getInstance();
+        mAlarmState = AlarmState.getInstance();
 
         mPhoneNumber = new StringBuilder();
         mMessageBody = new StringBuilder();
 
-        if (intent.getAction().equals(SMS_RECEIVED))
-        {
+        if (intent.getAction().equals(SMS_RECEIVED)) {
             Bundle bundle = intent.getExtras();
             if (bundle == null)
                 return;
@@ -61,99 +61,98 @@ public class SmsReceiver extends BroadcastReceiver
             for (int i = 0; i < pdusObj.length; i++)
                 messages[i] = SmsMessage.createFromPdu((byte[]) pdusObj[i]);
 
-            for (SmsMessage smsMessage : messages)
-            {
+            for (SmsMessage smsMessage : messages) {
                 mMessageBody.append(smsMessage.getMessageBody());
                 mPhoneNumber.append(smsMessage.getOriginatingAddress());
             }
-            Toast.makeText(context, "SMS : " + mMessageBody + " From " + mPhoneNumber, Toast.LENGTH_SHORT).show();
-            doAlarms();
+//            showToast("SMS : " + mMessageBody + " From " + mPhoneNumber);
+            play_alarm_if_requested_alarm_is_available();
         }
     }
 
-    private void doAlarms()
-    {
-        mAlarmsLocalDataSource.getAlarms(new AlarmsDataSource.LoadAlarmsCallBack()
-        {
+    private void play_alarm_if_requested_alarm_is_available() {
+        mAlarmsLocalDataSource.getAlarms(new AlarmsDataSource.LoadAlarmsCallBack() {
             @Override
-            public void onAlarmsLoaded(List<Alarm> alarms)
-            {
-                for (Alarm alarm : alarms)
-                {
-                    if (alarm.getPhoneNumber().toString().replaceAll("[()\\s-]+", "").equals(mPhoneNumber.toString()))
-                    {
-                        Calendar calendar = Calendar.getInstance(Locale.getDefault());
-                        int currentTime = Utils.timeToInt(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
-                        Log.i("SmsReceiver", "getAlarms - Phone number is matched");
-                        Log.i("SmsReceiver", "isMyServiceRunning? : " + isMyServiceRunning(AlarmService.class)+"");
-                        Log.i("SmsReceiver", "isAvailableDay? : " + isAvailableDay(alarm.getSetDayOfWeek())+"");
-                        Log.i("SmsReceiver", "isStartKeyword? : " + isStartKeyword(alarm.getStartKeyword())+"");
-                        Log.i("SmsReceiver", "isAvailableTime? : " + isAvailableTime(alarm.getStartTime(), alarm.getEndTime(), currentTime)+"");
-
-                        if (  !(mAlarmAuth.isIsAlarmActive()) &&
-                                alarm.isActivate() &&
-                                isAvailableDay(alarm.getSetDayOfWeek()) &&
-                                isStartKeyword(alarm.getStartKeyword()) &&
-                                isAvailableTime(alarm.getStartTime(), alarm.getEndTime(), currentTime))
-                        {
-                            /** activate an alarm service */
-                            Toast.makeText(mContext, "알람울림", Toast.LENGTH_SHORT).show();
-                            doAlarmRing();
-
-                            return;
-                        } else if (mAlarmAuth.getAlarmAuthor().equals(mPhoneNumber.toString()) &&
-                                isEndKeyword(alarm.getEndKeyword()))
-                        {
-                            stopAlarmRing();
-                            return;
-                        }
-                    }
-                }
+            public void onAlarmsLoaded(List<Alarm> alarms) {
+                int isAvailable = get_result_requested_alarm_is_in_alarm_list(alarms);
+                if(isAvailable == AVAILABLE_AND_ALARM_START)
+                    runAlarm();
+                else if(isAvailable == AVAILABLE_AND_ALARM_END)
+                    stopAlarm();
+                else if(isAvailable == NO_AVAILABLE)
+                    return;
             }
         });
     }
 
-    private boolean isMyServiceRunning(Class<?> serviceClass)
-    {
-        ActivityManager manager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
-        {
-            if (serviceClass.getName().equals(service.service.getClassName()))
-            {
-                return true;
+    private int get_result_requested_alarm_is_in_alarm_list(List<Alarm> alarms) {
+        for (Alarm alarm : alarms) {
+            if (alarm.getPhoneNumber().toString().replaceAll("[()\\s-]+", "").equals(mPhoneNumber.toString())) {
+
+                Calendar calendar = Calendar.getInstance(Locale.getDefault());
+                int currentTime = Utils.timeToInt(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
+                Log.i("SmsReceiver", "getAlarms - Phone number is matched");
+
+                if (!(mAlarmState.isIsAlarmActive()) &&
+                        alarm.isActivate() &&
+                        isAvailableDay(alarm.getSetDayOfWeek()) &&
+                        isStartKeyword(alarm.getStartKeyword()) &&
+                        isAvailableTime(alarm.getStartTime(), alarm.getEndTime(), currentTime))
+                    /** activate an alarm service */
+                    return AVAILABLE_AND_ALARM_START;
+                else if (mAlarmState.getAlarmAuthor().equals(mPhoneNumber.toString()) &&
+                        isEndKeyword(alarm.getEndKeyword()))
+                    return AVAILABLE_AND_ALARM_END;
             }
         }
+        return NO_AVAILABLE;
+    }
+
+    private void showToast(String toastString) {
+        Toast.makeText(mContext, toastString, Toast.LENGTH_SHORT).show();
+    }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
+
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
+            if (serviceClass.getName().equals(service.service.getClassName()))
+                return true;
+
         return false;
     }
 
-    private void stopAlarmRing()
-    {
-        Log.i("stopAlarmRing", "Ye");
-        //mAlarmAuth.setIsAlarmActive(false);
-        //mAlarmAuth.setAlarmAuthor("");
-        AlarmAuth.delInstance();
-
+    private void stopAlarm() {
+        showToast("알람멈춤");
+        changeAlarmState(false);
         Intent serviceIntent = new Intent(mContext, AlarmService.class);
         mContext.stopService(serviceIntent);
+        mAlarmState.releaseInstance();
     }
 
-    private void doAlarmRing()
-    {
-        Log.i("doAlarmRing", "Ye");
-        mAlarmAuth.setIsAlarmActive(true);
-        mAlarmAuth.setAlarmAuthor(mPhoneNumber.toString());
-
+    private void runAlarm() {
+        showToast("알람울림");
+        changeAlarmState(true);
         Intent serviceIntent = new Intent(mContext, AlarmService.class);
         mContext.startService(serviceIntent);
     }
 
-    private boolean isStartKeyword(String startKeyword)
-    {
+    private void changeAlarmState(boolean isAlarmOccupied) {
+        if(isAlarmOccupied) {
+            mAlarmState.setIsAlarmActive(true);
+            mAlarmState.setAlarmAuthor(mPhoneNumber.toString());
+        }
+        else {
+            mAlarmState.setIsAlarmActive(false);
+            mAlarmState.setAlarmAuthor("");
+        }
+    }
+
+    private boolean isStartKeyword(String startKeyword) {
         return startKeyword.equals(mMessageBody.toString());
     }
 
-    private boolean isEndKeyword(String endKeyword)
-    {
+    private boolean isEndKeyword(String endKeyword) {
         return endKeyword.equals(mMessageBody.toString());
     }
 
@@ -161,16 +160,13 @@ public class SmsReceiver extends BroadcastReceiver
      * endTime이 startTime보다 클때(일반적 경우)
      * startTime이 endTime보다 클때(설정 갭이 커서 24를 지나는 경우)
      */
-    private boolean isAvailableTime(int startTime, int endTime, int currentTime)
-    {
-        if (startTime > endTime)
-        {
+    private boolean isAvailableTime(int startTime, int endTime, int currentTime) {
+        if (startTime > endTime) {
             if ((currentTime > startTime && currentTime > endTime) ||
                     (currentTime < startTime && currentTime < endTime) ||
                     (currentTime < startTime && currentTime > endTime))
                 return true;
-        } else
-        {
+        } else {
             if (startTime <= currentTime && currentTime <= endTime)
                 return true;
         }
@@ -178,13 +174,11 @@ public class SmsReceiver extends BroadcastReceiver
         return false;
     }
 
-    private boolean isAvailableDay(int setDayOfWeek)
-    {
+    private boolean isAvailableDay(int setDayOfWeek) {
         Calendar calendar = Calendar.getInstance();
         int day = calendar.get(Calendar.DAY_OF_WEEK);
 
-        switch (day)
-        {
+        switch (day) {
             case Calendar.SUNDAY:
                 if ((64 & setDayOfWeek) == 64)
                     return true;

@@ -9,23 +9,22 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.pouz.alarm.R;
-import com.pouz.alarm.addeditalarm.AddEditAlarmFragment;
 import com.pouz.alarm.data.source.local.AlarmsLocalDataSource;
 import com.pouz.alarm.receiver.DeviceAdminReceiver;
 
 public class AlarmsActivity extends AppCompatActivity {
     public static final int REQUEST_CODE_FOR_SMS = 1;
     public static final int REQUEST_CODE_FOR_BOOT_COMPLETED = 2;
+    public static final int REQUEST_CODE_FOR_INTERNET = 3;
+    public static final int REQUEST_CODE_FOR_ACCESS_NETWORK_STATE = 4;
     private AlarmsPresenter mAlarmPresenter;
 
     /**
@@ -45,6 +44,11 @@ public class AlarmsActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_BOOT_COMPLETED) != PackageManager.PERMISSION_DENIED)
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECEIVE_BOOT_COMPLETED}, REQUEST_CODE_FOR_BOOT_COMPLETED);
 
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_DENIED)
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET}, REQUEST_CODE_FOR_INTERNET);
+
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NETWORK_STATE) != PackageManager.PERMISSION_DENIED)
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_NETWORK_STATE}, REQUEST_CODE_FOR_ACCESS_NETWORK_STATE);
     }
 
     @Override
@@ -84,6 +88,10 @@ public class AlarmsActivity extends AppCompatActivity {
         setContentView(R.layout.alarms_act);
 
         checkDeviceAdmin();
+
+//        AdView adView = (AdView) findViewById(R.id.adView);
+//        AdRequest adRequest = new AdRequest.Builder().build();
+//        adView.loadAd(adRequest);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.alarms_toolbar);
         setSupportActionBar(toolbar);

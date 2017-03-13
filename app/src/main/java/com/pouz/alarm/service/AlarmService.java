@@ -1,15 +1,12 @@
 package com.pouz.alarm.service;
 
-import android.Manifest;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
@@ -22,15 +19,12 @@ import android.util.Log;
  */
 
 public class AlarmService extends Service {
-    // TODO: need to find another way to communicate between Service and Receiver(SmsReceiver <-> AlarmService, SmsReceiver <-> AlarmStopService)
-    private AlarmAuth mAlarmAuth;
+    private AlarmState mAlarmState;
 
     private final static int VIBRATE_DELAY_TIME = 2000;
     private final static int DURATION_OF_VIBRATION = 1000;
     private final static int VOLUME_INCREASE_DELAY = 600;
     private final static float MAX_VOLUME = 1.0f;
-
-    private static int sCurrentPosition = 0;
 
     private MediaPlayer mPlayer;
     private Vibrator mVibrator;
@@ -79,7 +73,7 @@ public class AlarmService extends Service {
         ht.start();
         mHandler = new Handler(ht.getLooper());
 
-        mAlarmAuth = AlarmAuth.getInstance();
+        mAlarmState = AlarmState.getInstance();
     }
 
     @Override
@@ -97,10 +91,8 @@ public class AlarmService extends Service {
     {
         // TODO: 종료 시점에 쓰레드를 해지하지 않아도 서비스가 종료되면 알아서 터지나 확인
         Log.e("AlarmService", "Exit Service");
-        if (mAlarmAuth.isIsAlarmActive())
+        if (mAlarmState.isIsAlarmActive())
         {
-//            if(mPlayer != null)
-//                sCurrentPosition = mPlayer.getCurrentPosition();
 
             Intent broadcastIntent = new Intent("com.pouz.alarm.receiver.AlarmStopReceiver");
             sendBroadcast(broadcastIntent);
@@ -127,7 +119,6 @@ public class AlarmService extends Service {
 
     public void startPlayer()
     {
-        //mPlayer = MediaPlayer.create(this, R.raw.ringtone);
         mPlayer = new MediaPlayer();
         mPlayer.setOnErrorListener(mErrorListener);
 
@@ -143,7 +134,6 @@ public class AlarmService extends Service {
             mPlayer.setLooping(true);
             mPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
             mPlayer.setVolume(MAX_VOLUME, MAX_VOLUME);
-            //mPlayer.seekTo(sCurrentPosition);
             mPlayer.prepare();
             mPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener()
             {

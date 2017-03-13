@@ -52,6 +52,7 @@ public class AddEditAlarmFragment extends PreferenceFragmentCompat implements Ad
     private Alarm mAlarmUsingForEdit;
 
     CheckBoxPreference mon, tue, wed, thu, fri, sat, sun;
+    Preference mContact, mStartKeyword, mEndKeyword, mStartTime, mEndTime;
 
     public static AddEditAlarmFragment newInstance() {
         return new AddEditAlarmFragment();
@@ -62,11 +63,11 @@ public class AddEditAlarmFragment extends PreferenceFragmentCompat implements Ad
         mAlarm = alarm;
         int flag = mAlarm.getSetDayOfWeek();
 
-        findPreference("contact").setSummary(mAlarm.getName()+ ", " + mAlarm.getPhoneNumber());
-        findPreference("start_keyword").setSummary(mAlarm.getStartKeyword());
-        findPreference("end_keyword").setSummary(mAlarm.getEndKeyword());
-        findPreference("set_start_time").setSummary(Utils.intToTime(mAlarm.getStartTime()));
-        findPreference("set_end_time").setSummary(Utils.intToTime(mAlarm.getEndTime()));
+        mContact.setSummary(mAlarm.getName()+ ", " + mAlarm.getPhoneNumber());
+        mStartKeyword.setSummary(mAlarm.getStartKeyword());
+        mEndKeyword.setSummary(mAlarm.getEndKeyword());
+        mStartTime.setSummary(Utils.intToTime(mAlarm.getStartTime()));
+        mEndTime.setSummary(Utils.intToTime(mAlarm.getEndTime()));
 
         if((flag & 1) != 0)
             mon.setChecked(true);
@@ -144,11 +145,6 @@ public class AddEditAlarmFragment extends PreferenceFragmentCompat implements Ad
                 /** add logic to check a alarm set is correct */
                 mPresenter.saveAlarm(mAlarm);
                 return true;
-            //case android.R.id.home:
-            //    Intent intent = new Intent(getContext(), AlarmsActivity.class);
-            //    startActivity(intent);
-
-            //    return true;
         }
         return false;
     }
@@ -158,12 +154,17 @@ public class AddEditAlarmFragment extends PreferenceFragmentCompat implements Ad
         Log.i("AddEditAlarmFragment", "onCreatePreferences");
         addPreferencesFromResource(R.xml.add_edit_alarm_preference);
 
-        findPreference("contact").setOnPreferenceClickListener(this);
-        findPreference("start_keyword").setOnPreferenceChangeListener(this);
-        findPreference("end_keyword").setOnPreferenceChangeListener(this);
-        findPreference("end_keyword").setDefaultValue("");
-        findPreference("set_start_time").setOnPreferenceClickListener(this);
-        findPreference("set_end_time").setOnPreferenceClickListener(this);
+        mContact = findPreference("contact");
+        mStartKeyword = findPreference("start_keyword");
+        mEndKeyword = findPreference("end_keyword");
+        mStartTime = findPreference("set_start_time");
+        mEndTime = findPreference("set_end_time");
+
+        mContact.setOnPreferenceClickListener(this);
+        mStartKeyword.setOnPreferenceChangeListener(this);
+        mEndKeyword.setOnPreferenceChangeListener(this);
+        mStartTime.setOnPreferenceClickListener(this);
+        mEndTime.setOnPreferenceClickListener(this);
 
         mon = (CheckBoxPreference) findPreference("alarm_monday");
         mon.setOnPreferenceChangeListener(this);
@@ -190,9 +191,6 @@ public class AddEditAlarmFragment extends PreferenceFragmentCompat implements Ad
         if(mMode == EDIT_MODE){
             setPreferenceByAlarm(mAlarmUsingForEdit);
         }
-
-        // TODO: change for alarm activation
-        //mIsActivate = true;
     }
 
     @Override
@@ -213,7 +211,7 @@ public class AddEditAlarmFragment extends PreferenceFragmentCompat implements Ad
                 mAlarm.setPhoneNumber(cursor.getString(1));
 
                 cursor.close();
-                findPreference("contact").setSummary(mAlarm.getName()+ ", " + mAlarm.getPhoneNumber());
+                mContact.setSummary(mAlarm.getName()+ ", " + mAlarm.getPhoneNumber());
                 break;
         }
     }
@@ -309,19 +307,30 @@ public class AddEditAlarmFragment extends PreferenceFragmentCompat implements Ad
 
     @Override
     public void showTimePicker(final String key) {
-        // TODO: Need to change implements style
-        // TODO: set selected time on edit mode
         Date date = new Date(System.currentTimeMillis());
+
+        if(mMode == EDIT_MODE) {
+            switch(key) {
+                case "set_start_time":
+                    date.setHours(mAlarm.getStartTime() / 60);
+                    date.setMinutes(mAlarm.getStartTime() % 60);
+                    break;
+                case "set_end_time":
+                    date.setHours(mAlarm.getEndTime() / 60);
+                    date.setMinutes(mAlarm.getEndTime() % 60);
+                    break;
+            }
+        }
         new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int i, int i1) {
                 switch (key) {
                     case "set_start_time":
-                        findPreference(key).setSummary(Utils.intToTime(Utils.timeToInt(i, i1)));
+                        mStartTime.setSummary(Utils.intToTime(Utils.timeToInt(i, i1)));
                         mAlarm.setStartTime(Utils.timeToInt(i, i1));
                         break;
                     case "set_end_time":
-                        findPreference(key).setSummary(Utils.intToTime(Utils.timeToInt(i, i1)));
+                        mEndTime.setSummary(Utils.intToTime(Utils.timeToInt(i, i1)));
                         mAlarm.setEndTime(Utils.timeToInt(i, i1));
                         break;
                 }
@@ -331,9 +340,8 @@ public class AddEditAlarmFragment extends PreferenceFragmentCompat implements Ad
 
     @Override
     public void finishAddEdit() {
-        getActivity().setResult(Activity.RESULT_OK); // Intent에 추가되나?
-        // TODO: Need to check right here
-        getActivity().finish(); // 현재 액티비티 닫음. 전 액티비티로 회귀? or something?
+        getActivity().setResult(Activity.RESULT_OK);
+        getActivity().finish();
     }
 
     @Override
