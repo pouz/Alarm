@@ -14,11 +14,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.pouz.alarm.R;
 import com.pouz.alarm.data.Alarm;
 import com.pouz.alarm.utils.Utils;
@@ -88,8 +93,16 @@ public class AlarmsFragment extends Fragment implements AlarmsContract.View {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_alarms, container, false);
 
-        ListView listView = (ListView) root.findViewById(R.id.alarms_list);
+        final ListView listView = (ListView) root.findViewById(R.id.alarms_list);
         listView.setAdapter(mListAdapter);
+
+        MobileAds.initialize(getActivity().getApplicationContext(), "ca-app-pub-4268007252677003/9029086373");
+        AdView mAdView = (AdView) root.findViewById(R.id.adView);
+//        mAdView.setAdSize(AdSize.BANNER);
+//        mAdView.setAdUnitId("ca-app-pub-4268007252677003/9029086373");
+
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         FloatingActionButton fab = (FloatingActionButton) root.findViewById(R.id.alarms_add_fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -113,6 +126,20 @@ public class AlarmsFragment extends Fragment implements AlarmsContract.View {
             public void onRefresh() {
                 mPresenter.loadAlarms(true);
                 swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                int topRowVerticalPosition =
+                        (listView == null || listView.getChildCount() == 0) ? 0 : listView.getChildAt(0).getTop();
+
+                swipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
             }
         });
 
