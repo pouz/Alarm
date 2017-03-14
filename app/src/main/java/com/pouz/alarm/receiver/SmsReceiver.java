@@ -9,6 +9,7 @@ import android.telephony.SmsMessage;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.pouz.alarm.utils.SmsSender;
 import com.pouz.alarm.utils.Utils;
 import com.pouz.alarm.data.Alarm;
 import com.pouz.alarm.data.source.AlarmsDataSource;
@@ -37,6 +38,7 @@ public class SmsReceiver extends BroadcastReceiver {
     private StringBuilder mMessageBody;
 
     private AlarmState mAlarmState;
+
 
 
     @Override
@@ -75,11 +77,11 @@ public class SmsReceiver extends BroadcastReceiver {
             @Override
             public void onAlarmsLoaded(List<Alarm> alarms) {
                 int isAvailable = get_result_requested_alarm_is_in_alarm_list(alarms);
-                if(isAvailable == AVAILABLE_AND_ALARM_START)
+                if (isAvailable == AVAILABLE_AND_ALARM_START)
                     runAlarm();
-                else if(isAvailable == AVAILABLE_AND_ALARM_END)
+                else if (isAvailable == AVAILABLE_AND_ALARM_END)
                     stopAlarm();
-                else if(isAvailable == NO_AVAILABLE)
+                else if (isAvailable == NO_AVAILABLE)
                     return;
             }
         });
@@ -93,12 +95,12 @@ public class SmsReceiver extends BroadcastReceiver {
                 int currentTime = Utils.timeToInt(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
                 Log.i("SmsReceiver", "getAlarms - Phone number is matched");
 
-                if (!(mAlarmState.isIsAlarmActive()) &&
+                if (!(mAlarmState.isAlarmActive()) &&
                         alarm.isActivate() &&
                         isAvailableDay(alarm.getSetDayOfWeek()) &&
                         isStartKeyword(alarm.getStartKeyword()) &&
                         isAvailableTime(alarm.getStartTime(), alarm.getEndTime(), currentTime))
-                    /** activate an alarm service */
+                /** activate an alarm service */
                     return AVAILABLE_AND_ALARM_START;
                 else if (mAlarmState.getAlarmAuthor().equals(mPhoneNumber.toString()) &&
                         isEndKeyword(alarm.getEndKeyword()))
@@ -125,26 +127,34 @@ public class SmsReceiver extends BroadcastReceiver {
     private void stopAlarm() {
         showToast("알람멈춤");
         changeAlarmState(false);
-        Intent serviceIntent = new Intent(mContext, AlarmService.class);
-        mContext.stopService(serviceIntent);
+        SmsSender.sendEndAlarmSMS(mContext, mPhoneNumber.toString());
+        mContext.startService(makeIntent());
         mAlarmState.releaseInstance();
     }
 
     private void runAlarm() {
         showToast("알람울림");
         changeAlarmState(true);
+        SmsSender.sendStartAlarmSMS(mContext, mPhoneNumber.toString());
+        mContext.startService(makeIntent());
+    }
+
+    private Intent makeIntent() {
         Intent serviceIntent = new Intent(mContext, AlarmService.class);
-        mContext.startService(serviceIntent);
+        Log.i("SmsReceiver", "alarm_activation :: " + mAlarmState.isAlarmActive());
+        serviceIntent.putExtra("alarm_activation", mAlarmState.isAlarmActive());
+        return serviceIntent;
     }
 
     private void changeAlarmState(boolean isAlarmOccupied) {
-        if(isAlarmOccupied) {
+        if (isAlarmOccupied) {
             mAlarmState.setIsAlarmActive(true);
             mAlarmState.setAlarmAuthor(mPhoneNumber.toString());
-        }
-        else {
+            Log.i("changeAlarmState", mAlarmState.isAlarmActive() + " :: " + mAlarmState.getAlarmAuthor());
+        } else {
             mAlarmState.setIsAlarmActive(false);
             mAlarmState.setAlarmAuthor("");
+            Log.i("changeAlarmState", mAlarmState.isAlarmActive() + " :: " + mAlarmState.getAlarmAuthor());
         }
     }
 

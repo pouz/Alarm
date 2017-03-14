@@ -17,6 +17,8 @@ public class AlarmServiceStopReceiver extends BroadcastReceiver
     public void onReceive(Context context, Intent intent)
     {
         Log.i(AlarmServiceStopReceiver.class.getSimpleName(), "Service Stops!");
+        Intent mIntent = new Intent(context, AlarmService.class);
+        mIntent.putExtra("alarm_activation", intent.getBooleanExtra("alarm_activation", false));
         context.startService(new Intent(context, AlarmService.class));
     }
 }

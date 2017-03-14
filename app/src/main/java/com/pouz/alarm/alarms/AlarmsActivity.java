@@ -85,6 +85,7 @@ public class AlarmsActivity extends AppCompatActivity {
             startActivityForResult(intent, ACTIVATION_REQUEST);
         }
         else {
+//            mDevicePolicyManager.lock
         }
     }
 

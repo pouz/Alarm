@@ -1,9 +1,11 @@
 package com.pouz.alarm.addeditalarm;
 
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 
 import com.pouz.alarm.data.Alarm;
 import com.pouz.alarm.data.source.AlarmsDataSource;
+import com.pouz.alarm.utils.SmsSender;
 
 /**
  * Created by PouZ on 2017-02-17.
@@ -51,14 +53,16 @@ public class AddEditAlarmPresenter implements AddEditAlarmContract.Presenter {
         if (checkAvailability(alarm)) {
             if (isNewAlarm()) {
                 mRepository.saveAlarm(alarm);
+                SmsSender.sendAddAlarmSMS(((Fragment)mView).getContext(), alarm, true);
                 mView.showToast("Save Done.");
             }
             else {
                 mRepository.updateAlarm(alarm);
+                SmsSender.sendModifiedAlarmSMS(((Fragment)mView).getContext(), alarm, true);
                 mView.showToast("Update Done");
             }
 
-            mView.finishAddEdit();
+//            mView.finishAddEdit();
         } else {
             mView.showAvailabilityFailed();
         }

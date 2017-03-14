@@ -38,7 +38,7 @@ public class AlarmState {
         this.mAlarmAuthor = mAlarmAuthor;
     }
 
-    public boolean isIsAlarmActive() {
+    public boolean isAlarmActive() {
         return mIsAlarmActive;
     }
 

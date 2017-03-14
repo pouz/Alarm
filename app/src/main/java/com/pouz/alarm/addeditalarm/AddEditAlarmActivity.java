@@ -42,8 +42,6 @@ public class AddEditAlarmActivity extends AppCompatActivity
                 (AddEditAlarmFragment) getSupportFragmentManager().findFragmentById(R.id.preferenceAddEditFrame);
         if (addEditAlarmFragment == null)
         {
-            // frame layout과 fragment 연결. Fragment 를 singletone으로 생성해 놓았기 때문에 이런식으로
-            // 다시 한번 확인해 볼 필요가 있다.
             addEditAlarmFragment = AddEditAlarmFragment.newInstance();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.add(R.id.preferenceAddEditFrame, addEditAlarmFragment);

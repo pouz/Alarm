@@ -33,6 +33,7 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.pouz.alarm.R;
 import com.pouz.alarm.data.Alarm;
+import com.pouz.alarm.utils.SmsSender;
 import com.pouz.alarm.utils.Utils;
 import com.pouz.alarm.service.AlarmState;
 import com.pouz.alarm.addeditalarm.AddEditAlarmActivity;
@@ -87,6 +88,7 @@ public class AlarmsFragment extends Fragment implements AlarmsContract.View {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         mPresenter.deleteAlarm(longClickedAlarm.getID());
+                                        SmsSender.sendDeleteAlarmSMS(getContext(), longClickedAlarm, true);
                                     }
                                 }).setNegativeButton("아니오", null).show();
                     }
