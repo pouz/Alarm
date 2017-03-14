@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <item
+        android:id="@+id/menu_alarms_add"
+        android:icon="@drawable/ic_add_alarm_white"
+        android:title="@string/menu_add_alarms"
+        app:showAsAction="always" />
+</menu>

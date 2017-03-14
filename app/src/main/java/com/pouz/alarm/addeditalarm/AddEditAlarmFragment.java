@@ -25,6 +25,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.pouz.alarm.R;
+import com.pouz.alarm.utils.SmsSender;
 import com.pouz.alarm.utils.Utils;
 import com.pouz.alarm.alarms.AlarmsActivity;
 import com.pouz.alarm.data.Alarm;

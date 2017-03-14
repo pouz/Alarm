@@ -7,11 +7,18 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -88,6 +95,22 @@ public class AlarmsFragment extends Fragment implements AlarmsContract.View {
         }, mPresenter);
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_alarms, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.menu_alarms_add:
+                mPresenter.addAlarm();
+                return true;
+        }
+
+        return false;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -96,22 +119,13 @@ public class AlarmsFragment extends Fragment implements AlarmsContract.View {
         final ListView listView = (ListView) root.findViewById(R.id.alarms_list);
         listView.setAdapter(mListAdapter);
 
+        setHasOptionsMenu(true);
+
         MobileAds.initialize(getActivity().getApplicationContext(), "ca-app-pub-4268007252677003/9029086373");
         AdView mAdView = (AdView) root.findViewById(R.id.adView);
-//        mAdView.setAdSize(AdSize.BANNER);
-//        mAdView.setAdUnitId("ca-app-pub-4268007252677003/9029086373");
 
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
-
-        FloatingActionButton fab = (FloatingActionButton) root.findViewById(R.id.alarms_add_fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mPresenter.addAlarm();
-            }
-        });
-
 
         final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipe_layout);
         swipeRefreshLayout.setColorSchemeColors(

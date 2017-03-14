@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="true">
-
+<!--
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/alarms_add_fab"
             android:layout_width="wrap_content"
@@ -22,7 +22,7 @@
             android:clickable="true"
             android:src="@drawable/ic_add_alarm_white_3x"
             app:backgroundTint="@color/colorPrimary"/>
-
+-->
         <com.google.android.gms.ads.AdView
             android:id="@+id/adView"
             android:layout_width="match_parent"

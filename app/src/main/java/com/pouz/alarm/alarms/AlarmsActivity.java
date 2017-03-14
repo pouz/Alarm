@@ -25,6 +25,7 @@ public class AlarmsActivity extends AppCompatActivity {
     public static final int REQUEST_CODE_FOR_BOOT_COMPLETED = 2;
     public static final int REQUEST_CODE_FOR_INTERNET = 3;
     public static final int REQUEST_CODE_FOR_ACCESS_NETWORK_STATE = 4;
+    public static final int REQUEST_CODE_FOR_SEND_SMS = 5;
     private AlarmsPresenter mAlarmPresenter;
 
     /**
@@ -49,6 +50,10 @@ public class AlarmsActivity extends AppCompatActivity {
 
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NETWORK_STATE) != PackageManager.PERMISSION_DENIED)
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_NETWORK_STATE}, REQUEST_CODE_FOR_ACCESS_NETWORK_STATE);
+
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_DENIED)
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, REQUEST_CODE_FOR_SEND_SMS);
+
     }
 
     @Override
@@ -67,7 +72,6 @@ public class AlarmsActivity extends AppCompatActivity {
                 Log.e("RequestPermissionResult", "Failed Boot Completed");
             }
             return;
-
         }
     }
 
@@ -80,6 +84,8 @@ public class AlarmsActivity extends AppCompatActivity {
             intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, "I need permission!");
             startActivityForResult(intent, ACTIVATION_REQUEST);
         }
+        else {
+        }
     }
 
     @Override
@@ -87,22 +93,8 @@ public class AlarmsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.alarms_act);
 
-        checkDeviceAdmin();
-
-//        AdView adView = (AdView) findViewById(R.id.adView);
-//        AdRequest adRequest = new AdRequest.Builder().build();
-//        adView.loadAd(adRequest);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.alarms_toolbar);
         setSupportActionBar(toolbar);
-
-        //FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.alarms_add_fab);
-        //fab.setOnClickListener(new View.OnClickListener() {
-        //    @Override
-        //    public void onClick(View view) {
-        //        mAlarmPresenter.addAlarm(AddEditAlarmFragment.ADD_MODE);
-        //}
-        //});
 
         AlarmsFragment alarmsFragment = (AlarmsFragment) getSupportFragmentManager().findFragmentById(R.id.alarms_fragment);
         if (alarmsFragment == null) {
