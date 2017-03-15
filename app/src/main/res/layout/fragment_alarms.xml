@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.SwipeRefreshLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/swipe_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -12,39 +12,28 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="true">
-<!--
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/alarms_add_fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top|right"
-            android:layout_margin="@dimen/list_item_padding"
-            android:clickable="true"
-            android:src="@drawable/ic_add_alarm_white_3x"
-            app:backgroundTint="@color/colorPrimary"/>
--->
-        <com.google.android.gms.ads.AdView
-            android:id="@+id/adView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="bottom"
-            ads:adSize="BANNER"
-            ads:adUnitId="@string/banner_ad_unit_id_choice"/>
 
-        <LinearLayout
-            android:id="@+id/alarmsLinearLayout"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
+
+            <com.google.android.gms.ads.AdView
+                android:id="@+id/adView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                ads:adSize="BANNER"
+                ads:adUnitId="@string/banner_ad_unit_id_choice"/>
 
             <ListView
                 android:id="@+id/alarms_list"
+                android:divider="@null"
+                android:dividerHeight="0dp"
+                android:layout_marginBottom="@dimen/banner_height"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
+        </RelativeLayout>
 
-        </LinearLayout>
 
     </android.support.design.widget.CoordinatorLayout>
 </android.support.v4.widget.SwipeRefreshLayout>

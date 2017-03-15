@@ -67,7 +67,6 @@ public class SmsReceiver extends BroadcastReceiver {
                 mMessageBody.append(smsMessage.getMessageBody());
                 mPhoneNumber.append(smsMessage.getOriginatingAddress());
             }
-//            showToast("SMS : " + mMessageBody + " From " + mPhoneNumber);
             play_alarm_if_requested_alarm_is_available();
         }
     }
@@ -93,7 +92,6 @@ public class SmsReceiver extends BroadcastReceiver {
 
                 Calendar calendar = Calendar.getInstance(Locale.getDefault());
                 int currentTime = Utils.timeToInt(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
-                Log.i("SmsReceiver", "getAlarms - Phone number is matched");
 
                 if (!(mAlarmState.isAlarmActive()) &&
                         alarm.isActivate() &&
@@ -141,7 +139,6 @@ public class SmsReceiver extends BroadcastReceiver {
 
     private Intent makeIntent() {
         Intent serviceIntent = new Intent(mContext, AlarmService.class);
-        Log.i("SmsReceiver", "alarm_activation :: " + mAlarmState.isAlarmActive());
         serviceIntent.putExtra("alarm_activation", mAlarmState.isAlarmActive());
         return serviceIntent;
     }
@@ -150,11 +147,9 @@ public class SmsReceiver extends BroadcastReceiver {
         if (isAlarmOccupied) {
             mAlarmState.setIsAlarmActive(true);
             mAlarmState.setAlarmAuthor(mPhoneNumber.toString());
-            Log.i("changeAlarmState", mAlarmState.isAlarmActive() + " :: " + mAlarmState.getAlarmAuthor());
         } else {
             mAlarmState.setIsAlarmActive(false);
             mAlarmState.setAlarmAuthor("");
-            Log.i("changeAlarmState", mAlarmState.isAlarmActive() + " :: " + mAlarmState.getAlarmAuthor());
         }
     }
 

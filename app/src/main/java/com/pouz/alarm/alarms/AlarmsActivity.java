@@ -96,6 +96,7 @@ public class AlarmsActivity extends AppCompatActivity {
         setContentView(R.layout.alarms_act);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.alarms_toolbar);
+        toolbar.setTitle(R.string.app_title);
         setSupportActionBar(toolbar);
 
         AlarmsFragment alarmsFragment = (AlarmsFragment) getSupportFragmentManager().findFragmentById(R.id.alarms_fragment);

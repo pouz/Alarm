@@ -1,12 +1,7 @@
 <resources>
-    <string name="app_name">Alarm</string>
-    <string name="app_title">Please... Wake Up!</string>
+    <string name="app_name">Wake me up!</string>
+    <string name="app_title">나를 깨워줘!</string>
     <string name="title_activity_alarms"></string>
-
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-
-    <string name="action_settings">설정</string>
 
     <string name="pick_the_person">대상 선택</string>
     <string name="start_keyword">알람 시작 단어</string>

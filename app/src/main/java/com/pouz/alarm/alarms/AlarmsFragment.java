@@ -118,10 +118,9 @@ public class AlarmsFragment extends Fragment implements AlarmsContract.View {
         setHasOptionsMenu(true);
 
         MobileAds.initialize(getActivity().getApplicationContext(), "ca-app-pub-4268007252677003/9029086373");
-        AdView mAdView = (AdView) root.findViewById(R.id.adView);
-
+        final AdView adView = (AdView) root.findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
+        adView.loadAd(adRequest);
 
         final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipe_layout);
         swipeRefreshLayout.setColorSchemeColors(
