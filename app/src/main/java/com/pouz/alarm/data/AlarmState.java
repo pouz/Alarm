@@ -1,6 +1,4 @@
-package com.pouz.alarm.service;
-
-import com.pouz.alarm.data.Alarm;
+package com.pouz.alarm.data;
 
 /**
  * Created by PouZ on 2017-02-28.

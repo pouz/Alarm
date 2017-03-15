@@ -14,6 +14,8 @@ import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.pouz.alarm.data.AlarmState;
+
 /**
  * Created by PouZ on 2017-02-24.
  */

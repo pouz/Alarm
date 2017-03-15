@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.EditTextPreference;
@@ -25,9 +24,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.pouz.alarm.R;
-import com.pouz.alarm.utils.SmsSender;
 import com.pouz.alarm.utils.Utils;
-import com.pouz.alarm.alarms.AlarmsActivity;
 import com.pouz.alarm.data.Alarm;
 
 import java.util.Date;
@@ -52,38 +49,37 @@ public class AddEditAlarmFragment extends PreferenceFragmentCompat implements Ad
     private int mMode;
     private Alarm mAlarmUsingForEdit;
 
-    CheckBoxPreference mon, tue, wed, thu, fri, sat, sun;
-    Preference mContact, mStartKeyword, mEndKeyword, mStartTime, mEndTime;
+    CheckBoxPreference mMonPreference, mTuePreference, mWedPreference, mThuPreference, mFriPreference, mSatPreference, mSunPreference;
+    Preference mContactPreference, mStartKeywordPreference, mEndKeywordPreference, mStartTimePreference, mEndTimePreference;
 
     public static AddEditAlarmFragment newInstance() {
         return new AddEditAlarmFragment();
     }
 
     public void setPreferenceByAlarm(final Alarm alarm) {
-        Log.i("AddEditAlarmFragment", "setPreferenceByAlarm -> " + alarm.toString());
         mAlarm = alarm;
         int flag = mAlarm.getSetDayOfWeek();
 
-        mContact.setSummary(mAlarm.getName()+ ", " + mAlarm.getPhoneNumber());
-        mStartKeyword.setSummary(mAlarm.getStartKeyword());
-        mEndKeyword.setSummary(mAlarm.getEndKeyword());
-        mStartTime.setSummary(Utils.intToTime(mAlarm.getStartTime()));
-        mEndTime.setSummary(Utils.intToTime(mAlarm.getEndTime()));
+        mContactPreference.setSummary(mAlarm.getName()+ ", " + mAlarm.getPhoneNumber());
+        mStartKeywordPreference.setSummary(mAlarm.getStartKeyword());
+        mEndKeywordPreference.setSummary(mAlarm.getEndKeyword());
+        mStartTimePreference.setSummary(Utils.intToTime(mAlarm.getStartTime()));
+        mEndTimePreference.setSummary(Utils.intToTime(mAlarm.getEndTime()));
 
         if((flag & 1) != 0)
-            mon.setChecked(true);
+            mMonPreference.setChecked(true);
         if((flag & 2) != 0)
-            tue.setChecked(true);
+            mTuePreference.setChecked(true);
         if((flag & 4) != 0)
-            wed.setChecked(true);
+            mWedPreference.setChecked(true);
         if((flag & 8) != 0)
-            thu.setChecked(true);
+            mThuPreference.setChecked(true);
         if((flag & 16) != 0)
-            fri.setChecked(true);
+            mFriPreference.setChecked(true);
         if((flag & 32) != 0)
-            sat.setChecked(true);
+            mSatPreference.setChecked(true);
         if((flag & 64) != 0)
-            sun.setChecked(true);
+            mSunPreference.setChecked(true);
     }
 
     public int getMode() {
@@ -92,19 +88,11 @@ public class AddEditAlarmFragment extends PreferenceFragmentCompat implements Ad
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.i("AddEditAlarmFragment", "onCreate");
-        // routine to get extras from activity.
-        //super.onCreate가 여기있으면 호출과 동시에 onCreatePreferences를 호출하기 때문에 꼬였음
-        //super.onCreate(savedInstanceState);
-
         mAlarm = new Alarm();
 
         mMode = getActivity().getIntent().getIntExtra("mode", 1);
-        Log.i("AddEditAlarmFragment", "onCreate() -> mode is " + ((mMode == 1) ? "ADD_MODE" : "EDIT_MODE"));
-        if(mMode == EDIT_MODE) {
+        if(mMode == EDIT_MODE)
             mAlarmUsingForEdit = getActivity().getIntent().getParcelableExtra("alarm");
-            Log.i("AddEditAlarmFragment", "onCreate() mAlarmUsingForEdit -> " + mAlarmUsingForEdit.toString());
-        }
         super.onCreate(savedInstanceState);
     }
 
@@ -116,8 +104,7 @@ public class AddEditAlarmFragment extends PreferenceFragmentCompat implements Ad
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        /** 상단에 글씨로 된 옵션메뉴 생성하려면 app:showAsAction="always" 해야함 */
-        Log.i("AddEditAlarmFragment", "onCreateView");
+        // 상단에 글씨로 된 옵션메뉴 생성하려면 app:showAsAction="always" 해야함
         setHasOptionsMenu(true);
         return super.onCreateView(inflater, container, savedInstanceState);
     }
@@ -125,20 +112,11 @@ public class AddEditAlarmFragment extends PreferenceFragmentCompat implements Ad
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.activity_add_edit_menu, menu);
-        //mMode = getActivity().getIntent().getIntExtra("mode", 1);
 
-        if (mMode == AddEditAlarmFragment.EDIT_MODE) {
-            // menu.getItem(index i) 는 해당 인덱스의 아이템 반환
-            // menu.findItem(int id) 로 찾는게 합당
+        if (mMode == AddEditAlarmFragment.EDIT_MODE)
             menu.findItem(R.id.menu_add_alarm).setTitle(R.string.edit_confirm);
-            // 메뉴 아이템 텍스트를 바꿀 때 받는 extras 처리할 때 alarm정보 extra도 함께 처리하려고 여기서 진행
-            // 이렇게 하면 너무 중구남방 onCreate()에서 extras를 처리하자.
-            //mAlarmUsingForEdit = getActivity().getIntent().getParcelableExtra("alarm");
-        }
     }
 
-
-    // routine to do when user select the option button
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -155,39 +133,39 @@ public class AddEditAlarmFragment extends PreferenceFragmentCompat implements Ad
         Log.i("AddEditAlarmFragment", "onCreatePreferences");
         addPreferencesFromResource(R.xml.add_edit_alarm_preference);
 
-        mContact = findPreference("contact");
-        mStartKeyword = findPreference("start_keyword");
-        mEndKeyword = findPreference("end_keyword");
-        mStartTime = findPreference("set_start_time");
-        mEndTime = findPreference("set_end_time");
+        mContactPreference = findPreference("contact");
+        mStartKeywordPreference = findPreference("start_keyword");
+        mEndKeywordPreference = findPreference("end_keyword");
+        mStartTimePreference = findPreference("set_start_time");
+        mEndTimePreference = findPreference("set_end_time");
 
-        mContact.setOnPreferenceClickListener(this);
-        mStartKeyword.setOnPreferenceChangeListener(this);
-        mEndKeyword.setOnPreferenceChangeListener(this);
-        mStartTime.setOnPreferenceClickListener(this);
-        mEndTime.setOnPreferenceClickListener(this);
+        mContactPreference.setOnPreferenceClickListener(this);
+        mStartKeywordPreference.setOnPreferenceChangeListener(this);
+        mEndKeywordPreference.setOnPreferenceChangeListener(this);
+        mStartTimePreference.setOnPreferenceClickListener(this);
+        mEndTimePreference.setOnPreferenceClickListener(this);
 
-        mon = (CheckBoxPreference) findPreference("alarm_monday");
-        mon.setOnPreferenceChangeListener(this);
-        mon.setChecked(false);
-        tue = (CheckBoxPreference) findPreference("alarm_tuesday");
-        tue.setOnPreferenceChangeListener(this);
-        tue.setChecked(false);
-        wed = (CheckBoxPreference) findPreference("alarm_wednesday");
-        wed.setOnPreferenceChangeListener(this);
-        wed.setChecked(false);
-        thu = (CheckBoxPreference) findPreference("alarm_thursday");
-        thu.setOnPreferenceChangeListener(this);
-        thu.setChecked(false);
-        fri = (CheckBoxPreference) findPreference("alarm_friday");
-        fri.setOnPreferenceChangeListener(this);
-        fri.setChecked(false);
-        sat = (CheckBoxPreference) findPreference("alarm_saturday");
-        sat.setOnPreferenceChangeListener(this);
-        sat.setChecked(false);
-        sun = (CheckBoxPreference) findPreference("alarm_sunday");
-        sun.setOnPreferenceChangeListener(this);
-        sun.setChecked(false);
+        mMonPreference = (CheckBoxPreference) findPreference("alarm_monday");
+        mMonPreference.setOnPreferenceChangeListener(this);
+        mMonPreference.setChecked(false);
+        mTuePreference = (CheckBoxPreference) findPreference("alarm_tuesday");
+        mTuePreference.setOnPreferenceChangeListener(this);
+        mTuePreference.setChecked(false);
+        mWedPreference = (CheckBoxPreference) findPreference("alarm_wednesday");
+        mWedPreference.setOnPreferenceChangeListener(this);
+        mWedPreference.setChecked(false);
+        mThuPreference = (CheckBoxPreference) findPreference("alarm_thursday");
+        mThuPreference.setOnPreferenceChangeListener(this);
+        mThuPreference.setChecked(false);
+        mFriPreference = (CheckBoxPreference) findPreference("alarm_friday");
+        mFriPreference.setOnPreferenceChangeListener(this);
+        mFriPreference.setChecked(false);
+        mSatPreference = (CheckBoxPreference) findPreference("alarm_saturday");
+        mSatPreference.setOnPreferenceChangeListener(this);
+        mSatPreference.setChecked(false);
+        mSunPreference = (CheckBoxPreference) findPreference("alarm_sunday");
+        mSunPreference.setOnPreferenceChangeListener(this);
+        mSunPreference.setChecked(false);
 
         if(mMode == EDIT_MODE){
             setPreferenceByAlarm(mAlarmUsingForEdit);
@@ -212,7 +190,7 @@ public class AddEditAlarmFragment extends PreferenceFragmentCompat implements Ad
                 mAlarm.setPhoneNumber(cursor.getString(1));
 
                 cursor.close();
-                mContact.setSummary(mAlarm.getName()+ ", " + mAlarm.getPhoneNumber());
+                mContactPreference.setSummary(mAlarm.getName()+ ", " + mAlarm.getPhoneNumber());
                 break;
         }
     }
@@ -229,7 +207,6 @@ public class AddEditAlarmFragment extends PreferenceFragmentCompat implements Ad
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         if (preference instanceof EditTextPreference) {
             ((EditTextPreference) preference).setText("");
-
 
             if (preference.getKey().toString().equals("start_keyword")) {
                 if (newValue.toString().equals(mAlarm.getEndKeyword())) {
@@ -252,33 +229,29 @@ public class AddEditAlarmFragment extends PreferenceFragmentCompat implements Ad
 
         } else if (preference instanceof CheckBoxPreference) {
             int flag = 0;
-            // 왜 반응이 한박자 느릴까? 누르고 boolean check가 바뀌기 전에 호출되는건가...
-            // 그렇다면 어떻게 해결해야 하는가?
-            // 이것말고 리스트로 해결해보자
             // TODO: check here for checkbox preference
             if (!((CheckBoxPreference) preference).isChecked())
                 ((CheckBoxPreference) preference).setChecked(true);
             else
                 ((CheckBoxPreference) preference).setChecked(false);
 
-            if (mon.isChecked()) {
+            if (mMonPreference.isChecked()) {
                 flag += 1;
             }
-            if (tue.isChecked())
+            if (mTuePreference.isChecked())
                 flag += (1 << 1);
-            if (wed.isChecked())
+            if (mWedPreference.isChecked())
                 flag += (1 << 2);
-            if (thu.isChecked())
+            if (mThuPreference.isChecked())
                 flag += (1 << 3);
-            if (fri.isChecked())
+            if (mFriPreference.isChecked())
                 flag += (1 << 4);
-            if (sat.isChecked())
+            if (mSatPreference.isChecked())
                 flag += (1 << 5);
-            if (sun.isChecked())
+            if (mSunPreference.isChecked())
                 flag += (1 << 6);
 
             mAlarm.setSetDayOfWeek(flag);
-            Log.i("Set Day of Week", "" + flag);
         }
         return true;
     }
@@ -327,11 +300,11 @@ public class AddEditAlarmFragment extends PreferenceFragmentCompat implements Ad
             public void onTimeSet(TimePicker timePicker, int i, int i1) {
                 switch (key) {
                     case "set_start_time":
-                        mStartTime.setSummary(Utils.intToTime(Utils.timeToInt(i, i1)));
+                        mStartTimePreference.setSummary(Utils.intToTime(Utils.timeToInt(i, i1)));
                         mAlarm.setStartTime(Utils.timeToInt(i, i1));
                         break;
                     case "set_end_time":
-                        mEndTime.setSummary(Utils.intToTime(Utils.timeToInt(i, i1)));
+                        mEndTimePreference.setSummary(Utils.intToTime(Utils.timeToInt(i, i1)));
                         mAlarm.setEndTime(Utils.timeToInt(i, i1));
                         break;
                 }

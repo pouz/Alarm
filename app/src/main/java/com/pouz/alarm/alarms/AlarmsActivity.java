@@ -54,6 +54,7 @@ public class AlarmsActivity extends AppCompatActivity {
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_DENIED)
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, REQUEST_CODE_FOR_SEND_SMS);
 
+        checkDeviceAdmin();
     }
 
     @Override

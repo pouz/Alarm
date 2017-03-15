@@ -47,12 +47,12 @@ public class SmsSender {
 
     }
 
-    public static void sendStartAlarmSMS(Context context, String mobile) {
-        sendSMS(context, mobile, SEND_START_ALARM_SMS);
+    public static void sendStartAlarmSMS(String mobile) {
+        sendSMS(mobile, SEND_START_ALARM_SMS);
     }
 
-    public static void sendEndAlarmSMS(Context context, String mobile) {
-        sendSMS(context, mobile, SEND_END_ALARM_SMS);
+    public static void sendEndAlarmSMS(String mobile) {
+        sendSMS(mobile, SEND_END_ALARM_SMS);
     }
 
     public static void sendSMSWithDialog(final Context context, final String mobile, final String text, boolean askDialog, final boolean closeActivity) {
@@ -71,14 +71,14 @@ public class SmsSender {
                     .setPositiveButton("보냄", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            sendSMS(context, mobile, text);
+                            sendSMS(mobile, text);
                             if(closeActivity)
                                 closeActivity((Activity) context);
                         }
                     }).show();
 
         } else {
-            sendSMS(context, mobile, text);
+            sendSMS(mobile, text);
             if(closeActivity)
                 closeActivity((Activity) context);
         }
@@ -86,71 +86,12 @@ public class SmsSender {
     }
 
     private static void closeActivity(Activity context) {
-        (context).setResult(Activity.RESULT_OK);
-        (context).finish();
+        context.setResult(Activity.RESULT_OK);
+        context.finish();
     }
 
-    private static void sendSMS(Context context, String mobile, String text) {
-        PendingIntent sentIntent = PendingIntent.getBroadcast(context, 0, new Intent("SMS_SENT_ACTION"), 0);
-        PendingIntent deliveredIntent = PendingIntent.getBroadcast(context, 0, new Intent("SMS_DELIVERED_ACTION"), 0);
-
+    public static void sendSMS(String mobile, String text) {
         Log.i("sendSMS", mobile + " :: " + text);
-//
-//        final BroadcastReceiver br_send_result = new BroadcastReceiver() {
-//            @Override
-//            public void onReceive(Context context, Intent intent) {
-//                switch (getResultCode()) {
-//                    case Activity.RESULT_OK:
-//                        // 전송 성공
-//                        Toast.makeText(context, "전송 완료", Toast.LENGTH_SHORT).show();
-//                        context.unregisterReceiver(this);
-//                        break;
-//                    case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
-//                        // 전송 실패
-//                        Toast.makeText(context, "전송 실패", Toast.LENGTH_SHORT).show();
-//                        context.unregisterReceiver(this);
-//                        break;
-//                    case SmsManager.RESULT_ERROR_NO_SERVICE:
-//                        // 서비스 지역 아님
-//                        Toast.makeText(context, "서비스 지역이 아닙니다", Toast.LENGTH_SHORT).show();
-//                        context.unregisterReceiver(this);
-//                        break;
-//                    case SmsManager.RESULT_ERROR_RADIO_OFF:
-//                        // 무선 꺼짐
-//                        Toast.makeText(context, "무선(Radio)가 꺼져있습니다", Toast.LENGTH_SHORT).show();
-//                        context.unregisterReceiver(this);
-//                        break;
-//                    case SmsManager.RESULT_ERROR_NULL_PDU:
-//                        // PDU 실패
-//                        Toast.makeText(context, "PDU Null", Toast.LENGTH_SHORT).show();
-//                        context.unregisterReceiver(this);
-//                        break;
-//                }
-//            }
-//        };
-//
-//        final BroadcastReceiver br_delivered_result = new BroadcastReceiver() {
-//            @Override
-//            public void onReceive(Context context, Intent intent) {
-//                switch (getResultCode()) {
-//                    case Activity.RESULT_OK:
-//                        // 도착 완료
-//                        Toast.makeText(context, "SMS 도착 완료", Toast.LENGTH_SHORT).show();
-//                        context.unregisterReceiver(this);
-//                        break;
-//                    case Activity.RESULT_CANCELED:
-//                        // 도착 안됨
-//                        Toast.makeText(context, "SMS 도착 실패", Toast.LENGTH_SHORT).show();
-//                        context.unregisterReceiver(this);
-//                        break;
-//                }
-//            }
-//        };
-//
-//        context.registerReceiver(br_send_result, new IntentFilter("SMS_SENT_ACTION"));
-//        context.registerReceiver(br_delivered_result, new IntentFilter("SMS_DELIVERED_ACTION"));
-//        SmsManager.getDefault().sendTextMessage(mobile, null, text, sentIntent, deliveredIntent);
-//        SmsManager.getDefault().sendTextMessage(mobile, null, text, null, null);
         SmsManager smsManager = SmsManager.getDefault();
         ArrayList<String> msgArray = smsManager.divideMessage(text);
         smsManager.sendMultipartTextMessage(mobile, null, msgArray, null, null);

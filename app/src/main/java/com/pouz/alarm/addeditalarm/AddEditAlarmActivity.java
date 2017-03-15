@@ -9,25 +9,14 @@ import android.support.v7.widget.Toolbar;
 import com.pouz.alarm.R;
 import com.pouz.alarm.data.source.local.AlarmsLocalDataSource;
 
-public class AddEditAlarmActivity extends AppCompatActivity
-{
+public class AddEditAlarmActivity extends AppCompatActivity {
 
     public static final int REQUEST_ADD_ALARM = 1;
 
     private AddEditAlarmContract.Presenter mPresenter;
 
-    /** Home as Up 은 activity에서 처리해야 한다..... fragment에서 처리할 수 있는 방법은? activity 호출 또는 onbackpressed를 fragment에서 호출? */
-    /*
     @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
-   }
-   */
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_edit_alarm);
 
@@ -40,8 +29,7 @@ public class AddEditAlarmActivity extends AppCompatActivity
 
         AddEditAlarmFragment addEditAlarmFragment =
                 (AddEditAlarmFragment) getSupportFragmentManager().findFragmentById(R.id.preferenceAddEditFrame);
-        if (addEditAlarmFragment == null)
-        {
+        if (addEditAlarmFragment == null) {
             addEditAlarmFragment = AddEditAlarmFragment.newInstance();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.add(R.id.preferenceAddEditFrame, addEditAlarmFragment);
@@ -49,7 +37,7 @@ public class AddEditAlarmActivity extends AppCompatActivity
         }
 
         mPresenter =
-               new AddEditAlarmPresenter(AlarmsLocalDataSource.getInstance(getApplicationContext()), addEditAlarmFragment);
+                new AddEditAlarmPresenter(AlarmsLocalDataSource.getInstance(getApplicationContext()), addEditAlarmFragment);
         addEditAlarmFragment.setPresenter(mPresenter);
     }
 

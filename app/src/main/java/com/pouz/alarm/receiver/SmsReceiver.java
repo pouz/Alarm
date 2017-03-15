@@ -14,7 +14,7 @@ import com.pouz.alarm.utils.Utils;
 import com.pouz.alarm.data.Alarm;
 import com.pouz.alarm.data.source.AlarmsDataSource;
 import com.pouz.alarm.data.source.local.AlarmsLocalDataSource;
-import com.pouz.alarm.service.AlarmState;
+import com.pouz.alarm.data.AlarmState;
 import com.pouz.alarm.service.AlarmService;
 
 import java.util.Calendar;
@@ -127,7 +127,7 @@ public class SmsReceiver extends BroadcastReceiver {
     private void stopAlarm() {
         showToast("알람멈춤");
         changeAlarmState(false);
-        SmsSender.sendEndAlarmSMS(mContext, mPhoneNumber.toString());
+        SmsSender.sendEndAlarmSMS(mPhoneNumber.toString());
         mContext.startService(makeIntent());
         mAlarmState.releaseInstance();
     }
@@ -135,7 +135,7 @@ public class SmsReceiver extends BroadcastReceiver {
     private void runAlarm() {
         showToast("알람울림");
         changeAlarmState(true);
-        SmsSender.sendStartAlarmSMS(mContext, mPhoneNumber.toString());
+        SmsSender.sendStartAlarmSMS(mPhoneNumber.toString());
         mContext.startService(makeIntent());
     }
 
@@ -166,10 +166,6 @@ public class SmsReceiver extends BroadcastReceiver {
         return endKeyword.equals(mMessageBody.toString());
     }
 
-    /**
-     * endTime이 startTime보다 클때(일반적 경우)
-     * startTime이 endTime보다 클때(설정 갭이 커서 24를 지나는 경우)
-     */
     private boolean isAvailableTime(int startTime, int endTime, int currentTime) {
         if (startTime > endTime) {
             if ((currentTime > startTime && currentTime > endTime) ||
