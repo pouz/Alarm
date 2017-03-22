@@ -14,7 +14,6 @@ import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -331,7 +330,8 @@ public class AddEditAlarmFragment extends PreferenceFragmentCompat implements Ad
     @Override
     public void showAvailabilityFailed() {
         Log.i("AddEditAlarmFragment", "showAvaulabilityFailed");
-        Snackbar.make(this.getView(), "선택항목이 유효하지 않습니다.\n다시한번 확인해 주세요.", Toast.LENGTH_LONG).setDuration(4000).show();
+        Snackbar.make(this.getView(), "선택항목이 유효하지 않습니다.\n다시한번 확인해 주세요.", Toast.LENGTH_LONG)
+                .setDuration(4000).show();
     }
 
     @Override

@@ -4,6 +4,31 @@
     <PreferenceCategory
         android:title="문자 전송">
 
+        <SwitchPreferenceCompat
+            android:title="문자 전송"
+            android:summary="문자를 전송합니다"
+            android:key="send_text" />
+
+        <SwitchPreferenceCompat
+            android:title="등록시 문자 전송"
+            android:summary="알람 대상 추가시 대상에게 문자를 전송합니다."
+            android:key="send_text_when_added"
+            android:defaultValue="false" />
+        <SwitchPreferenceCompat
+            android:title="삭제시 문자 전송"
+            android:summary="알람 대상 삭제시 대상에게 문자를 전송합니다."
+            android:key="send_text_when_deleted"
+            android:defaultValue="false" />
+        <SwitchPreferenceCompat
+            android:title="수정시 문자 전송"
+            android:summary="알람 대상 수정시 대상에게 문자를 전송합니다."
+            android:key="send_text_when_modified"
+            android:defaultValue="false" />
+        <SwitchPreferenceCompat
+            android:title="알람 시작/멈춤시 문자 전송"
+            android:summary="알람이 시작/멈춤을 대상에게 알립니다."
+            android:key="send_text_when_alarm_controlled"
+            android:defaultValue="false" />
 
     </PreferenceCategory>
 </PreferenceScreen>

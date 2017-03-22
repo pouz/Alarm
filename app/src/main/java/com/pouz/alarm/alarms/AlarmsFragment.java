@@ -215,9 +215,7 @@ public class AlarmsFragment extends Fragment implements AlarmsContract.View {
         private static final int MAX_ALPHA = 200;
         private static final int MIN_ALPHA = 30;
 
-        /**
-         * local functions
-         */
+        // local functions
         public AlarmAdapter(final List<Alarm> alarms, final AlarmItemListener itemListener, final AlarmsContract.Presenter presenter) {
             setList(alarms);
             mItemListener = itemListener;
@@ -234,9 +232,7 @@ public class AlarmsFragment extends Fragment implements AlarmsContract.View {
             notifyDataSetChanged();
         }
 
-        /**
-         * override BaseAdapter functions
-         */
+        // override functions
         @Override
         public int getCount() {
             return mAlarms.size();
