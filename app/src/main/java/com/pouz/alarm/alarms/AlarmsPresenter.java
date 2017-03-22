@@ -15,13 +15,11 @@ import java.util.List;
  * Created by PouZ on 2017-02-17.
  */
 
-public class AlarmsPresenter implements AlarmsContract.Presenter
-{
+public class AlarmsPresenter implements AlarmsContract.Presenter {
     private final AlarmsLocalDataSource mAlarmsLocalDataSource;
     private final AlarmsContract.View mAlarmsView;
 
-    public AlarmsPresenter(@Nullable  AlarmsLocalDataSource alarmsLocalDataSource, @Nullable AlarmsContract.View alarmsView)
-    {
+    public AlarmsPresenter(@Nullable AlarmsLocalDataSource alarmsLocalDataSource, @Nullable AlarmsContract.View alarmsView) {
         this.mAlarmsLocalDataSource = alarmsLocalDataSource;
         this.mAlarmsView = alarmsView;
 
@@ -29,21 +27,18 @@ public class AlarmsPresenter implements AlarmsContract.Presenter
     }
 
     @Override
-    public void start()
-    {
+    public void start() {
         loadAlarms(true);
     }
 
     @Override
     public void loadAlarms(boolean forcedLoad) {
         Log.i("AlarmsPresenter : ", "loadAlarms()");
-        mAlarmsLocalDataSource.getAlarms(new AlarmsLocalDataSource.LoadAlarmsCallBack()
-        {
+        mAlarmsLocalDataSource.getAlarms(new AlarmsLocalDataSource.LoadAlarmsCallBack() {
             @Override
             public void onAlarmsLoaded(List<Alarm> alarms) {
                 List<Alarm> alarmsToShow = new ArrayList<>();
-                for(Alarm alarm : alarms)
-                {
+                for (Alarm alarm : alarms) {
                     alarmsToShow.add(alarm);
                 }
 
@@ -54,9 +49,13 @@ public class AlarmsPresenter implements AlarmsContract.Presenter
     }
 
     @Override
-    public void addAlarm()
-    {
+    public void addAlarm() {
         mAlarmsView.showAddAlarm();
+    }
+
+    @Override
+    public void showSetting() {
+        mAlarmsView.showSetting();
     }
 
     @Override
@@ -65,8 +64,7 @@ public class AlarmsPresenter implements AlarmsContract.Presenter
     }
 
     @Override
-    public void deleteAlarm(int id)
-    {
+    public void deleteAlarm(int id) {
         mAlarmsLocalDataSource.deleteAlarm(id);
         loadAlarms(true);
     }

@@ -34,6 +34,7 @@ public class AlarmService extends Service {
     private Vibrator mVibrator;
 
     private Handler mHandler = new Handler();
+    // make vibration for alarm
     private Runnable mVibrationRunnable = new Runnable() {
         @Override
         public void run() {
@@ -42,7 +43,7 @@ public class AlarmService extends Service {
             mHandler.postDelayed(mVibrationRunnable, DURATION_OF_VIBRATION + VIBRATE_DELAY_TIME);
         }
     };
-
+    // make alarm volume to max
     private Runnable mVolumeRunnable = new Runnable() {
         @Override
         public void run() {
@@ -56,7 +57,7 @@ public class AlarmService extends Service {
             }
         }
     };
-
+    // MediaPlayer error listener
     private MediaPlayer.OnErrorListener mErrorListener = new MediaPlayer.OnErrorListener() {
         @Override
         public boolean onError(MediaPlayer mp, int what, int extra) {
@@ -90,9 +91,7 @@ public class AlarmService extends Service {
             mHandler.removeCallbacksAndMessages(null);
             onDestroy();
         }
-        // Start the activity where toy can top alarm.. we don't need it
         return Service.START_NOT_STICKY;
-//        return Service.START_STICKY;
     }
 
     @Override

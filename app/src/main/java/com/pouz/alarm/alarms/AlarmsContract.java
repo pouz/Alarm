@@ -24,11 +24,15 @@ public interface AlarmsContract
         void showAlarms(List<Alarm> alarms);
 
         void showSnackbar(final String string);
+
+        void showSetting();
     }
 
     interface Presenter extends BasePresenter
     {
         void addAlarm();
+
+        void showSetting();
 
         void editAlarm(final int mode, final Alarm alarm);
 

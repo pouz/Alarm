@@ -38,6 +38,12 @@
             android:theme="@style/AppTheme">
         </activity>
 
+        <activity
+            android:name=".settings.SettingAlarmActivity"
+            android:label="@string/title_activity_alarms"
+            android:theme="@style/AppTheme">
+        </activity>
+
         <receiver
             android:name=".receiver.SmsReceiver"
             android:exported="true"
@@ -63,12 +69,6 @@
             <intent-filter>
                 <action android:name="com.pouz.alarm.service.AlarmService"/>
             </intent-filter>
-        </service>
-
-        <service
-            android:name=".service.DummyService"
-            android:enabled="true"
-            android:exported="true">
         </service>
 
         <receiver

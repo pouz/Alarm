@@ -20,9 +20,12 @@
     <string name="delete_dialog_message">알람을 삭제 하시겠습니까?</string>
     <string name="add_confirm">추가</string>
     <string name="edit_confirm">완료</string>"
-
+    <!-- Menu -->
     <string name="menu_add_alarms">Add</string>
-
+    <string name="menu_setting_alarms">설정</string>
+    <!-- Toolbar -->
+    <string name="setting_alarm_toolbar_title">설정</string>
+    <!-- AdMob ID -->
     <string name="banner_ad_unit_id_choice">ca-app-pub-4268007252677003/9029086373</string>
 
 </resources>

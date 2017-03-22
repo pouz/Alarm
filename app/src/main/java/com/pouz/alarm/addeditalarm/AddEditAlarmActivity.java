@@ -18,14 +18,15 @@ public class AddEditAlarmActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_edit_alarm);
+        setContentView(R.layout.add_edit_alarm_act);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.add_edit_toolbar);
         setSupportActionBar(toolbar);
         ActionBar ab = getSupportActionBar();
+        ab.setTitle("새로 등록");
         ab.setDisplayHomeAsUpEnabled(true);
         ab.setDisplayShowHomeEnabled(true);
-        ab.setDisplayShowTitleEnabled(false);
+        ab.setDisplayShowTitleEnabled(true);
 
         AddEditAlarmFragment addEditAlarmFragment =
                 (AddEditAlarmFragment) getSupportFragmentManager().findFragmentById(R.id.preferenceAddEditFrame);

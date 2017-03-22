@@ -27,6 +27,7 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.pouz.alarm.R;
 import com.pouz.alarm.data.Alarm;
+import com.pouz.alarm.settings.SettingAlarmActivity;
 import com.pouz.alarm.utils.SmsSender;
 import com.pouz.alarm.utils.Utils;
 import com.pouz.alarm.data.AlarmState;
@@ -93,7 +94,7 @@ public class AlarmsFragment extends Fragment implements AlarmsContract.View {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_alarms, menu);
+        inflater.inflate(R.menu.alarms_menu, menu);
     }
 
     @Override
@@ -102,6 +103,8 @@ public class AlarmsFragment extends Fragment implements AlarmsContract.View {
             case R.id.menu_alarms_add:
                 mPresenter.addAlarm();
                 return true;
+            case R.id.menu_alarms_setting:
+                mPresenter.showSetting();
         }
 
         return false;
@@ -110,7 +113,7 @@ public class AlarmsFragment extends Fragment implements AlarmsContract.View {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_alarms, container, false);
+        View root = inflater.inflate(R.layout.alarms_frag, container, false);
 
         final ListView listView = (ListView) root.findViewById(R.id.alarms_list);
         listView.setAdapter(mListAdapter);
@@ -172,6 +175,12 @@ public class AlarmsFragment extends Fragment implements AlarmsContract.View {
         Log.e("showAddAlarm() ", "AlarmsFragment");
         Intent intent = new Intent(getContext(), AddEditAlarmActivity.class);
         intent.putExtra("mode", AddEditAlarmFragment.ADD_MODE);
+        startActivity(intent);
+    }
+
+    @Override
+    public void showSetting() {
+        Intent intent = new Intent(getContext(), SettingAlarmActivity.class);
         startActivity(intent);
     }
 

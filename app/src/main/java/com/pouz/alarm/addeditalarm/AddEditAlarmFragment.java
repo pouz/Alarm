@@ -8,11 +8,13 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -110,8 +112,16 @@ public class AddEditAlarmFragment extends PreferenceFragmentCompat implements Ad
     }
 
     @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if(mMode == EDIT_MODE) {
+            ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("수정");
+        }
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.activity_add_edit_menu, menu);
+        inflater.inflate(R.menu.add_edit_menu, menu);
 
         if (mMode == AddEditAlarmFragment.EDIT_MODE)
             menu.findItem(R.id.menu_add_alarm).setTitle(R.string.edit_confirm);
@@ -131,7 +141,7 @@ public class AddEditAlarmFragment extends PreferenceFragmentCompat implements Ad
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         Log.i("AddEditAlarmFragment", "onCreatePreferences");
-        addPreferencesFromResource(R.xml.add_edit_alarm_preference);
+        addPreferencesFromResource(R.xml.add_edit_alarm_pref);
 
         mContactPreference = findPreference("contact");
         mStartKeywordPreference = findPreference("start_keyword");
